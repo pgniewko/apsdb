@@ -66,7 +66,11 @@ class PlaceContext(object):
                 pycountry.countries.get(official_name=s)
                 return True
             except KeyError, e:
-                return False
+                try:
+                    pycountry.countries.get(alpha_3=s)
+                    return true
+                except KeyError, e:
+                    return False
 
         return False # PG 06/17/17
     

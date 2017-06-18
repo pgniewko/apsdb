@@ -95,9 +95,3 @@ def get_all_affiliations(json_file_):
 
     return aff_
 
-def get_areas(affiliation):
-##    import geograpy
-##  DO STH
-    
-    return []
-
