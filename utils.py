@@ -13,6 +13,10 @@ def get_journal_short_json(json_file_):
         data = json.load(data_file)
     return data['journal']['id']
 
+def get_doi(json_file_):
+    with open(json_file_) as data_file:    
+        data = json.load(data_file)
+    return data['id']
 
 def create_time_record(jname_, dict_):
     years_ = []
