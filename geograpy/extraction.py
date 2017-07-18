@@ -28,6 +28,6 @@ class Extractor(object):
 
         for ne in nes:
             if len(ne) == 1:
-                if (ne.label() == 'GPE' or ne.label() == 'PERSON') and ne[0][1] == 'NNP': # PG, 06/11/17
-#                if (ne.node == 'GPE' or ne.node == 'PERSON') and ne[0][1] == 'NNP':
+#                if (ne.label() == 'GPE' or ne.label() == 'PERSON') and ne[0][1] == 'NNP': # PG, 06/11/17; this version is for Linux
+                if (ne.node == 'GPE' or ne.node == 'PERSON') and ne[0][1] == 'NNP':    # this version is for Mac OS
                     self.places.append(ne[0][0])

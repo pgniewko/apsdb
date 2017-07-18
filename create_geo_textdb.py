@@ -20,10 +20,11 @@ def extract_country(affiliation):
 
 def browse_aps(path_, database_file):
 
+#    header = ['#','doi', 'journal', 'year', 'country']
+
     list_ = []
-    header = ['#','doi', 'journal', 'year', 'country']
     fo = open(database_file, 'w')
-    fo.write( " ".join(header) + "\n" )
+#    fo.write( " ".join(header) + "\n" )
     for root, dirs, files in os.walk(path_):
         for name in files:
             if name.endswith(( ".json" )):
