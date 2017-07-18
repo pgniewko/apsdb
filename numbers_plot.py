@@ -37,10 +37,10 @@ if __name__ == "__main__":
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
 #    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRE'
     pubs_data = browse_papers(database_path, pubs_data)
-    f, ax = plt.subplots(figsize=(10,10))
+    f, ax = plt.subplots(figsize=(8,8))
 
-    ax.set_xlabel('Year', fontsize=25)
-    ax.set_ylabel('# of PAPERS', fontsize=25)
+    ax.set_xlabel('Year', fontsize=20)
+    ax.set_ylabel('# of PAPERS', fontsize=20)
    
     top_journals = get_top_N(pubs_data, 6)
 
@@ -51,6 +51,9 @@ if __name__ == "__main__":
 
     plt.title('TOP %d JOURNALS' %( len(top_journals) ) ) 
     plt.legend(numpoints=1, loc=0)
+
+    f.text(0.95, 0.05, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
+    
     plt.show()
 
     

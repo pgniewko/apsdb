@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import numpy as np
 import json
 
 def get_year_jsonfile(json_file_):

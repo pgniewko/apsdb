@@ -90,7 +90,7 @@ if __name__ == "__main__":
 #    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRE'
 #    database_path = '../data_test'
     pubs_data = browse_papers(database_path, pubs_data)
-    f, ax = plt.subplots(figsize=(10,10))
+    f, ax = plt.subplots(figsize=(8,8))
 
    
     top_journals = get_top_N(pubs_data, 6)
@@ -101,8 +101,8 @@ if __name__ == "__main__":
     ctable, jmap = cumulative_freqs(tot_per_year, NN, pubs_data, top_journals)
 
     plt.subplot(1, 2, 1)
-    plt.xlabel('Year', fontsize=25)
-    plt.ylabel('Frequency', fontsize=25)
+    plt.xlabel('Year', fontsize=20)
+    plt.ylabel('Frequency', fontsize=20)
     m,n = ctable.shape
     
     for k_ in pubs_data.keys():
@@ -119,12 +119,12 @@ if __name__ == "__main__":
     plt.legend(numpoints=1, loc=0)
    
     plt.subplot(1, 2, 2)
-    plt.xlabel('Year', fontsize=25)
-    plt.ylabel('Total # of papers', fontsize=25)
+    plt.xlabel('Year', fontsize=20)
+    plt.ylabel('Total # of papers', fontsize=20)
 
     plt.semilogy(ctable.T[0], ctable.T[1] ,'o-',lw=2,color='blue')
 
-   
+    f.text(0.95, 0.05, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.show()
 
     
