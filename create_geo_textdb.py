@@ -51,7 +51,8 @@ def browse_aps(path_, database_file):
 
                 if len(countries_list) > 0:
                     for c_ in countries_list:
-                        record = [doi_, journal_, year_, c_]
+                        c_parts = c_.split()
+                        record = [doi_, journal_, year_, ".".join(c_parts) ]
                         fo.write( " ".join(record) + "\n" )
                         
 
@@ -61,7 +62,7 @@ def browse_aps(path_, database_file):
 if __name__ == "__main__":
     
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
-    o_path = "../mongodb_data/aps_doi_j_y_country.txt"
+    o_path = "../mongodb_data/test_aps_doi_j_y_country.txt"
 
     pubs_data = browse_aps(database_path, o_path)
 
