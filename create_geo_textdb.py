@@ -51,7 +51,8 @@ def browse_aps(path_, database_file):
 
                 if len(countries_list) > 0:
                     for c_ in countries_list:
-                        record = [doi_, journal_, year_, c_]
+                        c_parts = c_.split()
+                        record = [doi_, journal_, year_, ".".join(c_parts) ]
                         fo.write( " ".join(record) + "\n" )
                         
 

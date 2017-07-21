@@ -2,6 +2,7 @@ import nltk
 from newspaper import Article
 from .utils import remove_non_ascii
 
+from distutils.version import LooseVersion, StrictVersion
 
 class Extractor(object):
     def __init__(self, text=None, url=None):
@@ -26,8 +27,14 @@ class Extractor(object):
         text = nltk.word_tokenize(remove_non_ascii(self.text))
         nes = nltk.ne_chunk(nltk.pos_tag(text))
 
+
         for ne in nes:
             if len(ne) == 1:
-#                if (ne.label() == 'GPE' or ne.label() == 'PERSON') and ne[0][1] == 'NNP': # PG, 06/11/17; this version is for Linux
-                if (ne.node == 'GPE' or ne.node == 'PERSON') and ne[0][1] == 'NNP':    # this version is for Mac OS
-                    self.places.append(ne[0][0])
+                
+                if StrictVersion(nltk.__version__) >= StrictVersion('3.0.0'):
+                    if (ne.label() == 'GPE' or ne.label() == 'PERSON') and ne[0][1] == 'NNP': # PG, 06/11/17; new NLTK
+                        self.places.append(ne[0][0])
+        
+                else:
+                    if (ne.node == 'GPE' or ne.node == 'PERSON') and ne[0][1] == 'NNP':    # older NLTK
+                        self.places.append(ne[0][0])
