@@ -3,6 +3,8 @@
 import numpy as np
 import json
 
+failed_tries = 0
+
 def get_year_jsonfile(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
@@ -18,6 +20,18 @@ def get_doi(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
     return data['id']
+
+
+def get_coauthors_jsonfile(json_file_):
+    with open(json_file_) as data_file:    
+        data = json.load(data_file)
+    try:
+        return data['authors']
+    except KeyError:
+        global failed_tries
+        failed_tries += 1
+        return []
+
 
 def create_time_record(jname_, dict_):
     years_ = []
