@@ -104,5 +104,6 @@ if __name__ == "__main__":
     world = world[(world.name != "Antarctica") & (world.name != "Fr. S. Antarctic Lands") & (world.name != "Greenland")]
     world = world.to_crs({'init': 'epsg:3395'}) # world.to_crs(epsg=3395) would also work
     base = world.plot(column='papers_per_capita', cmap='rainbow')
- 
+
+    plt.title('Number of APS papers per capita', fontsize=20)
     plt.show()
