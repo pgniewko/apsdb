@@ -87,10 +87,9 @@ if __name__ == "__main__":
     pubs_data = {}
 
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
-#    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRE'
 #    database_path = '../data_test'
     pubs_data = browse_papers(database_path, pubs_data)
-    f, ax = plt.subplots(figsize=(8,8))
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7))
 
    
     top_journals = get_top_N(pubs_data, 6)
@@ -116,15 +115,31 @@ if __name__ == "__main__":
             plt.plot(x, y, '-', lw=2, label=k_)
     
 
-    plt.legend(numpoints=1, loc=0)
+    plt.legend(numpoints=1, loc=0, fontsize=15)
    
     plt.subplot(1, 2, 2)
-    plt.xlabel('Year', fontsize=20)
-    plt.ylabel('Total # of papers', fontsize=20)
+
+    plt.xlabel('Year', fontsize=15)
+    plt.ylabel('# of PAPERS', fontsize=15)
+
+    top_journals = get_top_N(pubs_data, 6)
+    
+    for k_ in pubs_data.keys():
+        if k_ in top_journals:
+            y, c = create_time_record(k_, pubs_data)
+            plt.plot(y, c, 'o', label=k_)
+
+    plt.title('TOP %d JOURNALS' %( len(top_journals) ) )
+    plt.legend(numpoints=1, loc=0, fontsize=15)
+    
+    f.text(0.95, 0.05, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
+
+    a = plt.axes([0.7, 0.67, .1, .2], facecolor='white')
+    plt.xlabel('Year', fontsize=8)
+    plt.ylabel('Total # of papers', fontsize=8)
 
     plt.semilogy(ctable.T[0], ctable.T[1] ,'o-',lw=2,color='blue')
 
-    f.text(0.95, 0.05, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.show()
 
     
