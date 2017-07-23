@@ -88,7 +88,7 @@ if __name__ == "__main__":
             t4.append( world['continent'][ix_w] )
             t5.append( world['pop_est'][ix_w] )
             t6.append( world['gdp_md_est'][ix_w] )
-            world['papers'][ix_w] += (dat_.values[ dat_.index.tolist().index( c ) ] * 1000.0)
+            world['papers'][ix_w] += dat_.values[ dat_.index.tolist().index( c ) ]
             REGISTERED_NUMBER += dat_.values[ dat_.index.tolist().index( c ) ]
         else:
             REGISTERED_NUMBER += dat_.values[ dat_.index.tolist().index( c ) ]
@@ -98,8 +98,8 @@ if __name__ == "__main__":
     print "TOTAL_NUMBER= ", TOTAL_NUMBER, " REGISTERED_NMBER= ", REGISTERED_NUMBER
 
 
-    world['papers_per_capita'] = world.papers / world.pop_est
-    world['papers_per_gdp'] = world.papers / world.gdp_md_est
+    world['papers_per_capita'] = 1000.0 * world.papers / world.pop_est
+    world['papers_per_gdp'] = 1000.0 * world.papers / world.gdp_md_est
 
     d = {'name':t1, 'counts':t2, 'geometry':t3, 'continent':t4, 'pop_est': t5, 'gdp_md_est': t6}
     # My custom data frame
@@ -123,5 +123,27 @@ if __name__ == "__main__":
     # fake up the array of the scalar mappable. Urgh...
     sm._A = []
     fig.colorbar(sm, cax=cax)
+
+    plt.show()
+   
+##
+    world['papers'] /= 1000.0
+    fig, ax = plt.subplots(1, figsize=(7,7))
+    vmin, vmax = 0, np.array( world['papers'][world['continent'] == "Europe"]  ).max()
+    base = world.plot(ax=ax, column='papers', cmap='rainbow', vmin=vmin, vmax=vmax)
+
+#    
+
+    plt.title('Number of APS papers in Europe [in thousands]', fontsize=20)
+    plt.xlabel('Latitude [$^\circ$]', fontsize=15)
+    plt.ylabel('Longitude [$^\circ$]', fontsize=15)
+#
+
+    cax = fig.add_axes([0.92, 0.12, 0.03, 0.7])
+    sm = plt.cm.ScalarMappable(cmap='rainbow', norm=plt.Normalize(vmin=vmin, vmax=vmax))
+    # fake up the array of the scalar mappable. Urgh...
+    sm._A = []
+    fig.colorbar(sm, cax=cax)
+
 
     plt.show()
