@@ -42,7 +42,8 @@ if __name__ == "__main__":
     REGISTERED_NUMBER = 0
     df = pd.read_table(sys.argv[1], delim_whitespace=True, names=( 'doi', 'journal', 'year', 'country'), comment='#', header=None )
     dat_ = df.groupby(['country']).size().sort_values(ascending=False)
- 
+
+    print dat_
     TOTAL_NUMBER = dat_.sum()
 
     as_list = dat_.index.tolist()
@@ -124,6 +125,8 @@ if __name__ == "__main__":
     sm._A = []
     fig.colorbar(sm, cax=cax)
 
+    fig.text(0.95, 0.05, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
+
     plt.show()
    
 ##
@@ -144,6 +147,7 @@ if __name__ == "__main__":
     # fake up the array of the scalar mappable. Urgh...
     sm._A = []
     fig.colorbar(sm, cax=cax)
-
+ 
+    fig.text(0.95, 0.05, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
 
     plt.show()
