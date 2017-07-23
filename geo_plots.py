@@ -43,7 +43,6 @@ if __name__ == "__main__":
     df = pd.read_table(sys.argv[1], delim_whitespace=True, names=( 'doi', 'journal', 'year', 'country'), comment='#', header=None )
     dat_ = df.groupby(['country']).size().sort_values(ascending=False)
 
-    print dat_
     TOTAL_NUMBER = dat_.sum()
 
     as_list = dat_.index.tolist()
