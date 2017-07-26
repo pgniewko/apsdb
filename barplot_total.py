@@ -70,14 +70,54 @@ def create_authors_map(f2):
 
     return map_2
 
-def combine_two_maps(map_1, map_2):
+#def combine_two_maps(map_1, map_2):
     
 
 
 if __name__ == "__main__":
 
+    colors = ['orange','blue','green','yellow','pink','magenta']
+    colors_=[]
+    TOP_X = 15
+    YEAR=1989
+    for i in range(TOP_X):
+        colors_.append( colors[i%6] )
+
+    x = np.arange(TOP_X)
 
     db1 = sys.argv[1]
     db2 = sys.argv[2]
 
-    map_countries = 
+    df = pd.read_table(sys.argv[1], delim_whitespace=True, names=( 'doi', 'journal', 'year', 'country'), comment='#', header=None )
+    dat_ = df[df['year']> YEAR].groupby(['country']).size().sort_values(ascending=False)
+   
+    print dat_
+    t_ = {}
+    c_l = []
+    n_l = []
+    for c_ in dat_[0:TOP_X].keys():
+        t_[c_] = dat_[c_]
+        cc_ = c_
+        if c_ in corrections:
+            cc_ = corrections[c_]
+        c_l.append( c_ )
+        n_l.append( dat_[c_])
+
+    fig, ax = plt.subplots(figsize=(7,7)) 
+    width=0.75
+
+    dat_ = pd.DataFrame( dict( country=dat_.keys(), counts=dat_.values ) )
+    
+    plt.barh(x, dat_['counts'][range(TOP_X-1,-1,-1)], width, color=colors_)
+    for i, v in enumerate(dat_['counts'][range(TOP_X-1,-1,-1)] ):
+        ax.text(v + 500, i-0.1, str(v), color='black')
+
+    plt.yticks(x, [ corrections[a.replace('.',' ')] if a.replace('.',' ') in corrections else a.replace('.',' ') for a in  dat_['country'][range(TOP_X-1,-1,-1)]] , rotation='horizontal')
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
+ 
+    plt.title("Number of papers for TOP %d countries after %d " %(TOP_X, YEAR) )
+    plt.xlim([0,1.2*dat_['counts'][range(TOP_X-1,-1,-1)].max()])
+
+    plt.xlabel("Number of papers",fontsize=15)
+    fig.text(0.95, 0.0, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
+    plt.show()
