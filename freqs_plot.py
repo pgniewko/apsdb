@@ -119,8 +119,8 @@ if __name__ == "__main__":
    
     plt.subplot(1, 2, 2)
 
-    plt.xlabel('Year', fontsize=15)
-    plt.ylabel('# of PAPERS', fontsize=15)
+    plt.xlabel('Year', fontsize=20)
+    plt.ylabel('# of PAPERS', fontsize=20)
 
     top_journals = get_top_N(pubs_data, 6)
     
