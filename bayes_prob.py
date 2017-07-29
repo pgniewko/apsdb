@@ -100,10 +100,21 @@ def combine_two_maps(map_1, map_2):
     map_3 = pd.DataFrame( dict( doi=d_l, journal=j_l, year=y_l, nauthors=n_l, countries=c_l ) )
     return map_3
 
-def P_A(country_, dat_, YEAR=1900):
+def P_A(country_, dat_, YEAR=1850, na_=-1, j_="ALL"):
 
-    d_ = dat_[dat_['year']> YEAR]
+    YEAR = max(1850, YEAR)
+    d_ = dat_[dat_['year'] > YEAR]
+
+    if na_ > 0:
+        d_ = d_[ d_['nauthors'] == str(na_)  ]
+    else:
+        d_ = d_[ d_['nauthors'] > str(1) ]
+
+    if j_ != "ALL":
+        d_ = d_[ d_['journal'] == j_ ]
+
  
+    
     counter = 0.0
     for cl in d_['countries']:
         if country_ in cl:
@@ -114,20 +125,19 @@ def P_A(country_, dat_, YEAR=1900):
     return p_a
 
 
-def P_AB(ca_, cb_,  dat_, YEAR=1900):
+def P_AB(ca_, cb_,  dat_, YEAR=1850, na_=-1, j_="ALL"):
 
-#    if JOURNAL != "ALL":
-#        dat_journal = dat_year[ dat_year['journal'] == JOURNAL ]
-#    else:
-#        dat_journal = dat_year
-#
-#    if NAUTHORS == -1:
-#        dat_nauthors = dat_journal
-#    else:
-#        dat_nauthors = dat_journal[ dat_journal ]
-        
+    YEAR = max(1850, YEAR)
+    d_ = dat_[dat_['year'] > YEAR]
     
-    d_ = dat_[dat_['year']> YEAR]
+    if na_ > 0:
+        d_ = d_[ d_['nauthors'] == str(na_) ]
+    else:
+        d_ = d_[ d_['nauthors'] > str(1)  ]
+
+    if j_ != "ALL":
+        d_ = d_[ d_['journal'] == j_ ]
+
  
     counter = 0.0
     for cl in d_['countries']:
@@ -146,7 +156,7 @@ if __name__ == "__main__":
     colors = ['orange','blue','green','yellow','pink','magenta']
     colors_=[]
     TOP_X = 15
-    TOP_X = 5
+    TOP_X = 15
     YEAR=1989
     for i in np.arange(TOP_X):
         c = cm.summer(i/float(TOP_X),1)
@@ -191,44 +201,63 @@ if __name__ == "__main__":
     plt.xlabel("Number of papers",fontsize=15)
     fig.text(0.95, 0.0, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.subplots_adjust(left=0.16)
- #   plt.show()
 
 
-#    print x
-#    print top_countries_list
 
-
+    fig, ax = plt.subplots(figsize=(7,7)) 
     m1_ = create_countries_map( db1 )
     m2_ = create_authors_map( db2 )
     m3_ = combine_two_maps(m1_, m2_)
 
-#    print m3_
-#    print type(m3_)
-#    print m3_
-
-    
-    p_france = P_A('France', m3_)
-    p_germany = P_A('Germany', m3_)
-    p_italy = P_A('Italy', m3_)
-
-
-    print p_france
-    print p_germany
-
-    p_f_g = P_AB('France','Germany', m3_)
-    print p_f_g
-
     top_countries_list = dat_['country'][0:TOP_X]
-    print top_countries_list
+
 
     bayes_probs = np.zeros([TOP_X, TOP_X])
-
-    for i_, tc_i in enumerate( top_countries_list) :
-        for j_, tc_j in enumerate( top_countries_list):
+    bayes_probs = np.random.rand( TOP_X, TOP_X )
+  
+    short_c = {"United.States":"USA", "United.Kingdom":"UK", "Russian.Federation":"Russia","British.Indian.Ocean.Territory":"India"}
+    myear_ = 1989
+    
+    for my_j_ in ["ALL", "PRA", "PRB", "PRD","PRE"]:
+      for nau_ in [-1,2,3,4,5]:
+        
+        for i_, tc_i in enumerate( top_countries_list ):
+          for j_, tc_j in enumerate( top_countries_list ):
             if i_ != j_:
-                p_j  = P_A(tc_j, m3_)
-                p_i_and_j = P_AB(tc_i, tc_j, m3_) 
+                p_j  = P_A(tc_j, m3_,YEAR=myear_, j_=my_j_, na_=nau_)
+                p_i_and_j = P_AB(tc_i, tc_j, m3_, YEAR=myear_, j_=my_j_, na_=nau_) 
                 p_i_cond_j = p_i_and_j / p_j
                 bayes_probs[i_][j_] = p_i_cond_j
+            else:
+                bayes_probs[i_][i_] = p_j  = P_A(tc_i, m3_, YEAR=myear_, j_=my_j_, na_=nau_)
         
-    print bayes_probs
+        
+        for xi in x:
+          for xj in x: 
+            if xi != xj:
+                plt.scatter(xi, xj, s=2000.0*bayes_probs[xi][xj], color='red')
+            else:
+                plt.scatter(xi, xj, s=2000.0*bayes_probs[xi][xj], color='blue')
+                
+    
+        plt.xlim(-0.5+min(x),max(x)+0.5)
+        plt.ylim(-0.5+min(x),max(x)+0.5)
+  
+        if nau_ > 0:
+            #plt.title("P( x | y, #a = %d, j=%s )" % ( nau_, my_j_ ) , fontsize=20)
+            plt.title("P( x | y )", fontsize=20)
+        else:
+            #plt.title("P( x | y, #a > 1, j=%s )" %(my_j_) , fontsize=20 )
+            plt.title("P( x | y )", fontsize=20 )
+    
+        plt.xticks(x, [ short_c[a] if a in short_c else a for a in  dat_['country'][range(TOP_X)] ], rotation=45)
+        plt.yticks(x, [ short_c[a] if a in short_c else a for a in  dat_['country'][range(TOP_X)] ], rotation=45)
+        fig.text(0.95, 0.0, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
+        
+        if nau_ > 1:
+            plt.savefig("y_"+str(myear_)+"_j_"+str(my_j_)+"_na_"+str(nau_) +".png")
+        else:
+            plt.savefig("y_"+str(myear_)+"_j_"+str(my_j_)+"_na_more_than_2.png")
+
+
+#    plt.show()
