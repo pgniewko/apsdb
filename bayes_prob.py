@@ -202,8 +202,6 @@ if __name__ == "__main__":
     fig.text(0.95, 0.0, '(c) 2017, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.subplots_adjust(left=0.16)
 
-
-
     fig, ax = plt.subplots(figsize=(7,7)) 
     m1_ = create_countries_map( db1 )
     m2_ = create_authors_map( db2 )
@@ -218,7 +216,7 @@ if __name__ == "__main__":
     short_c = {"United.States":"USA", "United.Kingdom":"UK", "Russian.Federation":"Russia","British.Indian.Ocean.Territory":"India"}
     myear_ = 1989
     
-    for my_j_ in ["ALL", "PRA", "PRB", "PRD","PRE"]:
+    for my_j_ in ["ALL", "PRL", "PRA", "PRB", "PRD","PRE"]:
       for nau_ in [-1,2,3,4,5]:
         
         for i_, tc_i in enumerate( top_countries_list ):
