@@ -1,7 +1,5 @@
 #! /usr/bin/env python
 
-import sys
-
 from scholar import *
 
 def get_number_citations(doi_):
@@ -26,3 +24,7 @@ def get_number_citations(doi_):
             cits_ = item[0]
 
     return cits_
+
+if __name__ == "__main__":
+    DOI = "10.1103/PhysRevLett.56.2700"
+    print "DOI: ", DOI, " # CITATIONS: ", get_number_citations(DOI)
