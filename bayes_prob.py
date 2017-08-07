@@ -143,11 +143,9 @@ def P_AB(ca_, cb_,  dat_, YEAR=1850, na_=-1, j_="ALL"):
         if ca_ in cl and cb_ in cl :
             counter += 1.0
 
-    p_a = counter / len( d_['countries'])
+    p_ab = counter / len( d_['countries'])
 
-    return p_a
-
-
+    return p_ab
 
 
 if __name__ == "__main__":
