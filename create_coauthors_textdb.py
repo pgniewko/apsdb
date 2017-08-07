@@ -40,7 +40,7 @@ def browse_aps(path_, database_file):
 if __name__ == "__main__":
     
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
-    o_path = "../text_db/aps_doi_j_y_coauthors.txt"
+    o_path = "../db_text/aps_doi_j_y_coauthors.txt"
 
     pubs_data = browse_aps(database_path, o_path)
 
