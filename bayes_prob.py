@@ -88,7 +88,6 @@ def combine_two_maps(map_1, map_2):
         except KeyError:
             print k1_, " record not found."
             sys.exit(1)
-            continue
 
         d_l.append( k1_)
         j_l.append( j_ )
@@ -156,8 +155,8 @@ if __name__ == "__main__":
     colors = ['orange','blue','green','yellow','pink','magenta']
     colors_=[]
     TOP_X = 15
-    TOP_X = 15
     YEAR=1989
+
     for i in np.arange(TOP_X):
         c = cm.summer(i/float(TOP_X),1)
         colors_.append( c )
