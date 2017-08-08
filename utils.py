@@ -21,6 +21,11 @@ def get_doi(json_file_):
         data = json.load(data_file)
     return data['id']
 
+def get_abstract(json_file_):
+    with open(json_file_) as data_file:    
+        data = json.load(data_file)
+    return (data['abstract']['value'], data['abstract']['format'])
+
 
 def get_coauthors_jsonfile(json_file_):
     with open(json_file_) as data_file:    
