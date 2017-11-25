@@ -887,7 +887,6 @@ class ScholarSettings(object):
                               % citform)
         self.citform = citform
         self._is_configured = True
-        print self.citform
 
     def set_per_page_results(self, per_page_results):
         self.per_page_results = ScholarUtils.ensure_int(
@@ -965,14 +964,13 @@ class ScholarQuerier(object):
         if settings is None or not settings.is_configured():
             return True
 
-        print "#2:", settings.citform
         self.settings = settings
 
         # This is a bit of work. We need to actually retrieve the
         # contents of the Settings pane HTML in order to extract
         # hidden fields before we can compose the query for updating
         # the settings.
-        print self.GET_SETTINGS_URL
+
         html = self._get_http_response(url=self.GET_SETTINGS_URL,
                                        log_msg='dump of settings form HTML',
                                        err_msg='requesting settings failed')
@@ -1000,7 +998,6 @@ class ScholarQuerier(object):
                    'scisf': ''}
 
         if settings.citform != 0:
-            print "#4 settings.citform:", settings.citform
             urlargs['scis'] = 'yes'
             urlargs['scisf'] = '&scisf=%d' % settings.citform
 
@@ -1020,15 +1017,12 @@ class ScholarQuerier(object):
         """
         self.clear_articles()
         self.query = query
-        print query.get_url()
         html = self._get_http_response(url=query.get_url(),
                                        log_msg='dump of query response HTML',
                                        err_msg='results retrieval failed')
         if html is None:
             return
 
-        print "I'm here."
-        #print html
         self.parse(html)
 
     def get_citation_data(self, article):
@@ -1281,7 +1275,6 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
         if options.none:
             query.set_words_none(options.none)
         if options.phrase:
-            print "phrase that I gave:", options.phrase
             query.set_phrase(options.phrase)
         if options.title_only:
             query.set_scope(True)
@@ -1295,7 +1288,6 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
             query.set_include_citations(False)
 
     # proessing goes below
-    print "options.count:", options.count
     if options.count is not None:
         options.count = min(options.count, ScholarConf.MAX_PAGE_RESULTS)
         query.set_num_page_results(options.count)
@@ -1308,8 +1300,6 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
     elif options.csv_header:
         csv(querier, header=True)
     elif options.citation is not None:
-        print "options.citation"
-        print "Tutaj nie dziala."
         citation_export(querier)
     else:
         txt(querier, with_globals=options.txt_globals)
