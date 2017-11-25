@@ -1021,7 +1021,6 @@ class ScholarQuerier(object):
                                        log_msg='dump of query response HTML',
                                        err_msg='results retrieval failed')
         if html is None:
-            print("Kupa z dupy")
             return
 
         self.parse(html)
