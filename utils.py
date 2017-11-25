@@ -122,7 +122,7 @@ def get_all_affiliations(json_file_):
 
 
 def get_number_citations(doi_):
-    
+    ScholarConf.LOG_LEVEL = 4    
     querier  = ScholarQuerier()
     query    = SearchScholarQuery()
     query.set_phrase(doi_)
