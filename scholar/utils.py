@@ -22,7 +22,7 @@ def get_number_citations(doi_):
     for item in items:
         if item[1] == 'Citations':
             cits_ = item[0]
-
+    
     return cits_
 
 if __name__ == "__main__":

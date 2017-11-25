@@ -465,7 +465,6 @@ class ScholarArticleParser(object):
                 # versions URL in next if-block.
                 self.article['url_citations'] = \
                     self._strip_url_arg('num', self._path2url(tag.get('href')))
-
                 # We can also extract the cluster ID from the versions
                 # URL. Note that we know that the string contains "?",
                 # from the above if-statement.
@@ -541,7 +540,6 @@ class ScholarArticleParser120201(ScholarArticleParser):
         for tag in div:
             if not hasattr(tag, 'name'):
                 continue
-
             if tag.name == 'h3' and self._tag_has_class(tag, 'gs_rt') and tag.a:
                 self.article['title'] = ''.join(tag.a.findAll(text=True))
                 self.article['url'] = self._path2url(tag.a['href'])
@@ -563,7 +561,7 @@ class ScholarArticleParser120726(ScholarArticleParser):
     """
     def _parse_article(self, div):
         self.article = ScholarArticle()
-
+        
         for tag in div:
             if not hasattr(tag, 'name'):
                 continue
@@ -889,6 +887,7 @@ class ScholarSettings(object):
                               % citform)
         self.citform = citform
         self._is_configured = True
+        print self.citform
 
     def set_per_page_results(self, per_page_results):
         self.per_page_results = ScholarUtils.ensure_int(
@@ -958,6 +957,7 @@ class ScholarQuerier(object):
         self.opener = build_opener(HTTPCookieProcessor(self.cjar))
         self.settings = None # Last settings object, if any
 
+
     def apply_settings(self, settings):
         """
         Applies settings as provided by a ScholarSettings instance.
@@ -965,12 +965,14 @@ class ScholarQuerier(object):
         if settings is None or not settings.is_configured():
             return True
 
+        print "#2:", settings.citform
         self.settings = settings
 
         # This is a bit of work. We need to actually retrieve the
         # contents of the Settings pane HTML in order to extract
         # hidden fields before we can compose the query for updating
         # the settings.
+        print self.GET_SETTINGS_URL
         html = self._get_http_response(url=self.GET_SETTINGS_URL,
                                        log_msg='dump of settings form HTML',
                                        err_msg='requesting settings failed')
@@ -981,8 +983,8 @@ class ScholarQuerier(object):
         # "scisig" token to make the upload of our settings acceptable
         # to Google.
         soup = SoupKitchen.make_soup(html)
-
         tag = soup.find(name='form', attrs={'id': 'gs_settings_form'})
+        
         if tag is None:
             ScholarUtils.log('info', 'parsing settings failed: no form')
             return False
@@ -998,6 +1000,7 @@ class ScholarQuerier(object):
                    'scisf': ''}
 
         if settings.citform != 0:
+            print "#4 settings.citform:", settings.citform
             urlargs['scis'] = 'yes'
             urlargs['scisf'] = '&scisf=%d' % settings.citform
 
@@ -1017,13 +1020,15 @@ class ScholarQuerier(object):
         """
         self.clear_articles()
         self.query = query
-
+        print query.get_url()
         html = self._get_http_response(url=query.get_url(),
                                        log_msg='dump of query response HTML',
                                        err_msg='results retrieval failed')
         if html is None:
             return
 
+        print "I'm here."
+        #print html
         self.parse(html)
 
     def get_citation_data(self, article):
@@ -1141,7 +1146,9 @@ def csv(querier, header=False, sep='|'):
 
 def citation_export(querier):
     articles = querier.articles
+    #print articles
     for art in articles:
+        #print art
         print(art.as_citation() + '\n')
 
 
@@ -1274,6 +1281,7 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
         if options.none:
             query.set_words_none(options.none)
         if options.phrase:
+            print "phrase that I gave:", options.phrase
             query.set_phrase(options.phrase)
         if options.title_only:
             query.set_scope(True)
@@ -1286,10 +1294,13 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
         if options.no_citations:
             query.set_include_citations(False)
 
+    # proessing goes below
+    print "options.count:", options.count
     if options.count is not None:
         options.count = min(options.count, ScholarConf.MAX_PAGE_RESULTS)
         query.set_num_page_results(options.count)
 
+    # print parsing happens here
     querier.send_query(query)
 
     if options.csv:
@@ -1297,6 +1308,8 @@ scholar.py -c 5 -a "albert einstein" -t --none "quantum theory" --after 1970"""
     elif options.csv_header:
         csv(querier, header=True)
     elif options.citation is not None:
+        print "options.citation"
+        print "Tutaj nie dziala."
         citation_export(querier)
     else:
         txt(querier, with_globals=options.txt_globals)
