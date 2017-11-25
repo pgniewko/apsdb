@@ -26,7 +26,8 @@ if __name__ == "__main__":
     pap_cit = schlib.get_article_cite_history(author_id, paper_id)
 
     print( pap_cit )
-
+ 
+    print ( type ( pap_cit ) )
 
 
 
