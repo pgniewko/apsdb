@@ -122,7 +122,7 @@ def get_all_affiliations(json_file_):
 
 
 def get_number_citations(doi_):
-    ScholarConf.LOG_LEVEL = 4    
+#    ScholarConf.LOG_LEVEL = 4    
     querier  = ScholarQuerier()
     query    = SearchScholarQuery()
     query.set_phrase(doi_)
@@ -141,5 +141,8 @@ def get_number_citations(doi_):
     for item in items:
         if item[1] == 'Citations':
             cits_ = item[0]
+        
+        if item[1] == 'Versions list':
+            cit_link_ = item[0]
 
-    return cits_
+    return cits_, cit_link_
