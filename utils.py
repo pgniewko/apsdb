@@ -2,14 +2,16 @@
 
 import numpy as np
 import json
+import csv
+import geograpy
 
 failed_tries = 0
 
-def get_year_jsonfile(json_file_):
+def get_date_jsonfile(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
-    return data['date'].split('-')[0]
-
+    y,m,d = data['date'].split('-')
+    return (int(y),int(m),int(d))
 
 def get_journal_short_json(json_file_):
     with open(json_file_) as data_file:    
@@ -21,11 +23,26 @@ def get_doi(json_file_):
         data = json.load(data_file)
     return data['id']
 
+def get_issue_volume(json_file_):
+    with open(json_file_) as data_file:
+        data = json.load(data_file)
+    return (int(data['issue']['number']),int(data['volume']['number']))
+
+def get_number_of_pages(json_file_):
+    with open(json_file_) as data_file:
+        data = json.load(data_file)
+    return int(data['numPages'])
+
+
 def get_abstract(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
     return (data['abstract']['value'], data['abstract']['format'])
 
+def get_title(json_file_):
+    with open(json_file_) as data_file:    
+        data = json.load(data_file)
+    return data['title']['value']
 
 def get_coauthors_jsonfile(json_file_):
     with open(json_file_) as data_file:    
@@ -118,5 +135,55 @@ def get_all_affiliations(json_file_):
         aff_.append(ai['name'])
 
     return aff_
+
+def extract_country(affiliation):
+     places = geograpy.get_place_context(text=affiliation)
+     try:
+         country_ = places.country_mentions[0][0]
+         return country_
+     except IndexError, e:
+         return ""
+
+def get_all_countries(json_file_):
+    affiliations_ = get_all_affiliations(json_file_)
+
+    countries_list = []
+    for aff_ in affiliations_:
+        if len(aff_) > 0:
+            try:
+               country_ = extract_country(aff_)
+               if len(country_) > 0:
+                   countries_list.append(country_)
+
+            except Exception, e:
+               continue
+
+    countries_list = list( set( countries_list) )
+ 
+    return countries_list
+
+
+def parse_csv_file(csv_file):
+    aps_dict_1 = {}
+    aps_dict_2 = {}
+    with open(csv_file) as csvfile:
+        readCSV = csv.reader(csvfile, delimiter=',')
+        for row in readCSV:
+            if row[1] in aps_dict_1:
+                aps_dict_1[row[1]].append(row[0])
+            else:
+                aps_dict_1[row[1]] = [row[0]]
+
+            if row[0] in aps_dict_2:
+                aps_dict_1[row[0]].append(row[1])
+            else:
+                aps_dict_1[row[0]] = [row[1]]
+
+    return aps_dict_1, aps_dict_2
+
+
+
+
+
 
 

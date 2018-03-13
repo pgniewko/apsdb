@@ -2,20 +2,20 @@
 
 import os
 import json
-import geograpy
+#import geograpy
 
 from utils import get_year_jsonfile, get_journal_short_json
 from utils import get_doi
 from utils import get_all_affiliations
+from utils import extract_country
 
-
-def extract_country(affiliation):
-    places = geograpy.get_place_context(text=affiliation)
-    try:
-        country_ = places.country_mentions[0][0]
-        return country_
-    except IndexError, e:
-        return ""
+#def extract_country(affiliation):
+#    places = geograpy.get_place_context(text=affiliation)
+#    try:
+#        country_ = places.country_mentions[0][0]
+#        return country_
+#    except IndexError, e:
+#        return ""
 
 
 def browse_aps(path_, database_file):
