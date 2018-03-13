@@ -164,8 +164,8 @@ def get_all_countries(json_file_):
 
 
 def parse_csv_file(csv_file):
-    aps_dict_1 = {}
-    aps_dict_2 = {}
+    aps_dict_1 = {} # doi's citations
+    aps_dict_2 = {} # what doi cites
     with open(csv_file) as csvfile:
         readCSV = csv.reader(csvfile, delimiter=',')
         for row in readCSV:
@@ -175,9 +175,9 @@ def parse_csv_file(csv_file):
                 aps_dict_1[row[1]] = [row[0]]
 
             if row[0] in aps_dict_2:
-                aps_dict_1[row[0]].append(row[1])
+                aps_dict_2[row[0]].append(row[1])
             else:
-                aps_dict_1[row[0]] = [row[1]]
+                aps_dict_2[row[0]] = [row[1]]
 
     return aps_dict_1, aps_dict_2
 

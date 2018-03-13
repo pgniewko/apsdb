@@ -64,6 +64,7 @@ def create_cits_plots(data, title_=""):
     ax2.set_xlim( [0, 200] )
     ax2.set_ylim( [0, .25] )
 
+    fig.text(0.95, 0.05, '(c) 2018, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.show()
 
 if __name__ == "__main__":
