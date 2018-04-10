@@ -21,15 +21,22 @@ from utils import parse_csv_file
 
 
 def browse_papers(path_, csv_file):
-
+    print("Processing citations ...")
     dict_1, dict_2 = parse_csv_file(csv_file)
+
     client = MongoClient()
     db = client['apsdb']
+    aps = db.apsdb
+    print("Removing all record ...")
+    aps.delete_many({}) # Clean the previous record
+    #aps.drop()
 
+    print("Processing files ...")
     for root, dirs, files in os.walk(path_):
         for name in files:
             if name.endswith(( ".json" )):
                 jfile = root + "/" + name
+#                print jfile
 
                 year,month,day = get_date_jsonfile(jfile)
                 journal = get_journal_short_json(jfile)
@@ -50,6 +57,7 @@ def browse_papers(path_, csv_file):
                 aps_paper['num_authors'] = len(coauthors)
                 aps_paper['num_affs'] = len(affiliations)
                 aps_paper['num_countries'] = len(countries)
+                
                 aps_paper['num_pages'] = num_pages
                 
                 if doi in dict_1.keys():
@@ -58,27 +66,27 @@ def browse_papers(path_, csv_file):
                     aps_paper['citations'] = 0
                 
                 if doi in dict_2.keys():
-                    aps_paper['cited_articles'] = len( dict_2[doi] )
+                    aps_paper['num_references'] = len( dict_2[doi] )
                 else:
-                    aps_paper['cited_articles'] = 0
-                    
-
-
-                aps = db.apsdb
+                    aps_paper['num_references'] = 0
+            
+              
                 aps.insert_one(aps_paper)
 
-
-    print aps.find({"citations": 10})
+    return aps
                 
 
 if __name__ == "__main__":
     
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
-    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRL/47/'
+#    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRL/47/'
     citations_path = '../data/aps-dataset-citations-2016/aps-dataset-citations-2016.csv'
     
-    browse_papers(database_path, citations_path)
+    print("MongoDB build in progress ...")
 
-
+    aps_db = browse_papers(database_path, citations_path)
+    
+    print("MongoDB database build is done !")
+    
 
 
