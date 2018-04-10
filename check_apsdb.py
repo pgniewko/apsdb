@@ -2,7 +2,7 @@
 
 import os
 import pprint
-from pymongo import MongoClient
+import pymongo
 
 def browse_papers(path_):
 
@@ -16,18 +16,24 @@ def browse_papers(path_):
                 
 
 if __name__ == "__main__":
-    client = MongoClient()
+    
+    client = pymongo.MongoClient()
     db = client['apsdb']
     aps_db = db.apsdb
     mongo_db_num = aps_db.count()
 
-   
-#    for entry in aps_db.find({'citations': 0}):
-#        pprint.pprint(entry)
+    # FIND MOST CITED ARTICLE:
+    print("Paper most cited by other APS papers")
+    pprint.pprint( aps_db.find_one(sort=[('citations', -1)]) )
 
-    
-#    for entry in aps_db.find({'num_pages': "N/A"}):
-#        pprint.pprint(entry)
+    # FIND MOST CITING PAPER:
+    print("Paper citing most number of other APS papers")
+    pprint.pprint( aps_db.find_one(sort=[('num_references', -1)]) )
+   
+    # PRINT ALL PAPERS WITH NUMER OF CITATION LARGER THAN 500:
+    print("CITATION > 500")
+    for entry in aps_db.find({'citations': {"$gt": 500}}).sort('year'):
+        pprint.pprint(entry)
     
     db_path = '../data/aps-dataset-metadata-abstracts-2016'
     entries_num = browse_papers(db_path)

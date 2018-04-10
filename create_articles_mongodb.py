@@ -57,7 +57,8 @@ def browse_papers(path_, csv_file):
                 aps_paper['num_authors'] = len(coauthors)
                 aps_paper['num_affs'] = len(affiliations)
                 aps_paper['num_countries'] = len(countries)
-                
+                aps_paper['title']  = title
+
                 aps_paper['num_pages'] = num_pages
                 
                 if doi in dict_1.keys():

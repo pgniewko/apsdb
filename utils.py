@@ -185,8 +185,3 @@ def parse_csv_file(csv_file):
     return aps_dict_1, aps_dict_2
 
 
-
-
-
-
-
