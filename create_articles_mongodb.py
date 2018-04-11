@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
 import os
-#import json
 import numpy as np
 
 import pymongo
@@ -19,7 +18,7 @@ from utils import get_number_of_pages
 from utils import get_title
 from utils import parse_csv_file
 
-BIG_LIST_SIZE=1000
+BIG_LIST_SIZE=5000
 
 def browse_papers(path_, csv_file):
     print("Processing citations ...")

@@ -10,22 +10,27 @@ failed_tries = 0
 def get_date_jsonfile(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
-    y,m,d = data['date'].split('-')
+    
+    y, m, d = data['date'].split('-')
+
     return (int(y),int(m),int(d))
 
 def get_journal_short_json(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
+    
     return data['journal']['id']
 
 def get_doi(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
+
     return data['id']
 
 def get_issue_volume(json_file_):
     with open(json_file_) as data_file:
         data = json.load(data_file)
+
     try:
         i = int(data['issue']['number'])
         v = int(data['volume']['number'])
@@ -42,20 +47,22 @@ def get_number_of_pages(json_file_):
     except KeyError:
         return 'N/A'
   
-
 def get_abstract(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
+
     return (data['abstract']['value'], data['abstract']['format'])
 
 def get_title(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
+
     return data['title']['value']
 
 def get_coauthors_jsonfile(json_file_):
-    with open(json_file_) as data_file:    
+    with open(json_file_) as data_file:
         data = json.load(data_file)
+
     try:
         return data['authors']
     except KeyError:
@@ -103,7 +110,6 @@ def get_top_N(dict_, N):
 
     return final_list
 
-
 def get_classification_jsonfile(json_file_):
     with open(json_file_) as data_file:    
         data = json.load(data_file)
@@ -130,7 +136,6 @@ def get_concepts(concepts_):
     return conc_
 
 def get_all_affiliations(json_file_):
-
     with open(json_file_) as data_file:    
         data = json.load(data_file)
 
@@ -168,7 +173,6 @@ def get_all_countries(json_file_):
                continue
 
     countries_list = list( set( countries_list) )
- 
     return countries_list
 
 
