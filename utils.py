@@ -26,7 +26,13 @@ def get_doi(json_file_):
 def get_issue_volume(json_file_):
     with open(json_file_) as data_file:
         data = json.load(data_file)
-    return (int(data['issue']['number']),int(data['volume']['number']))
+    try:
+        i = int(data['issue']['number'])
+        v = int(data['volume']['number'])
+        return (i,v)
+
+    except KeyError:
+        return ('N/A','N/A')
 
 def get_number_of_pages(json_file_):
     with open(json_file_) as data_file:
@@ -34,7 +40,7 @@ def get_number_of_pages(json_file_):
     try:
         return int(data['numPages'])
     except KeyError:
-        return "N/A"
+        return 'N/A'
   
 
 def get_abstract(json_file_):
