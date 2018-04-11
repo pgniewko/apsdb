@@ -19,24 +19,26 @@ from utils import get_number_of_pages
 from utils import get_title
 from utils import parse_csv_file
 
+BIG_LIST_SIZE=100
 
 def browse_papers(path_, csv_file):
     print("Processing citations ...")
     dict_1, dict_2 = parse_csv_file(csv_file)
 
-    client = MongoClient()
-    db = client['apsdb']
-    aps = db.apsdb
+    client = MongoClient('localhost', 27017)
+    db = client['apsdb']                # Get a databes
+    aps = db['aps-articles-basic']      # Get a collection
+
     print("Removing all record ...")
-    aps.delete_many({}) # Clean the previous record
-    #aps.drop()
+    aps.delete_many({})                 # Clean the collection
 
     print("Processing files ...")
+
+    tmp_list = []
     for root, dirs, files in os.walk(path_):
         for name in files:
             if name.endswith(( ".json" )):
                 jfile = root + "/" + name
-#                print jfile
 
                 year,month,day = get_date_jsonfile(jfile)
                 journal = get_journal_short_json(jfile)
@@ -70,9 +72,14 @@ def browse_papers(path_, csv_file):
                     aps_paper['num_references'] = len( dict_2[doi] )
                 else:
                     aps_paper['num_references'] = 0
-            
-              
-                aps.insert_one(aps_paper)
+           
+                tmp_list.append(aps_paper)
+                if len(tmp_list) > BIG_LIST_SIZE:
+                    aps.insert_many(tmp_list)
+                    tmp_list = []
+
+    if len(tmp_list) > 0:
+        aps.insert_many(tmp_list)
 
     return aps
                 

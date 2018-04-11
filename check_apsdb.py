@@ -19,8 +19,11 @@ if __name__ == "__main__":
     
     client = pymongo.MongoClient()
     db = client['apsdb']
-    aps_db = db.apsdb
+    aps_db = db['aps-articles-basic']
     mongo_db_num = aps_db.count()
+
+    # PRINT OUT THE SIZE OF THE DATABASE
+    print("Size of the database at this point %i" %(mongo_db_num) )
 
     # FIND MOST CITED ARTICLE:
     print("Paper most cited by other APS papers")
@@ -31,9 +34,9 @@ if __name__ == "__main__":
     pprint.pprint( aps_db.find_one(sort=[('num_references', -1)]) )
    
     # PRINT ALL PAPERS WITH NUMER OF CITATION LARGER THAN 500:
-    print("CITATION > 500")
-    for entry in aps_db.find({'citations': {"$gt": 500}}).sort('year'):
-        pprint.pprint(entry)
+#    print("CITATION > 500")
+#    for entry in aps_db.find({'citations': {"$gt": 500}}).sort('year'):
+#        pprint.pprint(entry)
     
     db_path = '../data/aps-dataset-metadata-abstracts-2016'
     entries_num = browse_papers(db_path)
