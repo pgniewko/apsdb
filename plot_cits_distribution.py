@@ -1,9 +1,24 @@
 #! /usr/bin/env python
+#
+# usage: ./plot_cits_distribution.py cits.txt
 
 import sys
 import powerlaw
 import matplotlib.pylab as plt
 import numpy as np
+
+def top_papers(data, best=5):
+
+    X = []
+    Y = []
+    for data_point in data:
+       X.append(data_point[0])
+       Y.append(data_point[1])
+
+    XY = zip(Y,X)
+    XY.sort()
+    return XY[-(best+1):-1]
+
 
 
 def find_pdf_at_x(x,bins,f):
@@ -29,7 +44,8 @@ def fitted_pl_xy(alpha, xc, yc, xmin, xmax):
     return x_, y_
 
 def create_cits_plots(data, title_=""):
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7) )
+#    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7) )
+    fig, ax1 = plt.subplots(1, 1, figsize=(7,7) )
     fit = powerlaw.Fit(data, discrete=True)
     plt.suptitle(title_,fontsize=30)
 
@@ -55,14 +71,14 @@ def create_cits_plots(data, title_=""):
     ax1.legend(loc=0, fontsize=15)
 
 #### AX2
-    ax2.set_xlabel(r'$\rm x_{min}$', fontsize=20)
-    ax2.set_ylabel(r'$\rm D, \sigma, \alpha$', fontsize=20)
-    ax2.plot(fit.xmins, fit.Ds, label=r'$D$')
-    ax2.plot(fit.xmins, fit.sigmas, label=r'$\sigma$', linestyle='--')
-    ax2.plot(fit.xmins, fit.sigmas/fit.alphas, label=r'$\sigma /\alpha$', linestyle='--')
-    ax2.legend(loc=0, fontsize=15)
-    ax2.set_xlim( [0, 200] )
-    ax2.set_ylim( [0, .25] )
+#    ax2.set_xlabel(r'$\rm x_{min}$', fontsize=20)
+#    ax2.set_ylabel(r'$\rm D, \sigma, \alpha$', fontsize=20)
+#    ax2.plot(fit.xmins, fit.Ds, label=r'$D$')
+#    ax2.plot(fit.xmins, fit.sigmas, label=r'$\sigma$', linestyle='--')
+#    ax2.plot(fit.xmins, fit.sigmas/fit.alphas, label=r'$\sigma /\alpha$', linestyle='--')
+#    ax2.legend(loc=0, fontsize=15)
+#    ax2.set_xlim( [0, 200] )
+#    ax2.set_ylim( [0, .25] )
 
     fig.text(0.95, 0.05, '(c) 2018, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.show()
@@ -70,12 +86,14 @@ def create_cits_plots(data, title_=""):
 if __name__ == "__main__":
 
     data = []
+    full_data = []
     fin = open(sys.argv[1],'rU')
     for line in fin:
         pairs = line.split()
         data.append( int(pairs[1]) )
+        full_data.append([pairs[0],int(pairs[1])])
 
-
+    print top_papers(full_data)
 
     create_cits_plots(data, "All APS papers")
 
