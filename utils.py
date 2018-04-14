@@ -35,9 +35,10 @@ def get_issue_volume(json_file_):
         i = int(data['issue']['number'])
         v = int(data['volume']['number'])
         return (i,v)
-
     except KeyError:
         return ('N/A','N/A')
+    except ValueError:
+        return (data['issue']['number'],data['volume']['number'])
 
 def get_number_of_pages(json_file_):
     with open(json_file_) as data_file:
@@ -46,6 +47,8 @@ def get_number_of_pages(json_file_):
         return int(data['numPages'])
     except KeyError:
         return 'N/A'
+    except ValueError:
+        return data['numPages']
   
 def get_abstract(json_file_):
     with open(json_file_) as data_file:    

@@ -18,13 +18,14 @@ from utils import get_number_of_pages
 from utils import get_title
 from utils import parse_csv_file
 
-BIG_LIST_SIZE=5000
+BIG_LIST_SIZE=1000
 
 def browse_papers(path_, csv_file):
     print("Processing citations ...")
     dict_1, dict_2 = parse_csv_file(csv_file)
 
-    client = MongoClient('localhost', 27017)
+#    client = MongoClient('localhost', 27017)
+    client = MongoClient()
     db = client['apsdb']                # Get a databes
     aps = db['aps-articles-basic']      # Get a collection
 
