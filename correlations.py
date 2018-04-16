@@ -14,7 +14,7 @@ def calc_correlations(filein,journal):
 
 if __name__ == "__main__":
     
-    database_path = '../db_text/papers_data_tmp.txt'
+    database_path = '../db_text/papers_data.txt'
 
     journals = ['PRA','PRB','PRC','PRD','PRE','PRL']
     journals = ['PRA','PRAPPLIED']
@@ -49,7 +49,7 @@ if __name__ == "__main__":
                     covxy, corrxy, varx, vary = distance_stats(data_i, data_j)
                     pearson_corr.append(r)
                     dist_corr.append(corrxy)
-                    s = j_+" "+el_i+" "+el_j+" "+str(r)+" "+str(corrxy)+"\n"
+                    s = "%10s  %10s  %10s  % f  % f \n" % ( j_, el_i, el_j, r, corrxy)
                     fout.write(s)
 
         ax1.plot(dist_corr, pearson_corr,'o', color=j_colors[j_],label=j_ )
