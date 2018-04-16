@@ -7,29 +7,36 @@ import geograpy
 
 failed_tries = 0
 
-def get_date_jsonfile(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+def get_date_jsonfile(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
     
     y, m, d = data['date'].split('-')
 
     return (int(y),int(m),int(d))
 
-def get_journal_short_json(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+
+def get_journal_short_json(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
     
     return data['journal']['id']
 
-def get_doi(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+
+def get_doi(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
 
     return data['id']
 
-def get_issue_volume(json_file_):
-    with open(json_file_) as data_file:
-        data = json.load(data_file)
+
+def get_issue_volume(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:
+            data = json.load(data_file)
 
     try:
         i = int(data['issue']['number'])
@@ -40,9 +47,12 @@ def get_issue_volume(json_file_):
     except ValueError:
         return (data['issue']['number'],data['volume']['number'])
 
-def get_number_of_pages(json_file_):
-    with open(json_file_) as data_file:
-        data = json.load(data_file)
+
+def get_number_of_pages(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:
+            data = json.load(data_file)
+
     try:
         return int(data['numPages'])
     except KeyError:
@@ -50,21 +60,27 @@ def get_number_of_pages(json_file_):
     except ValueError:
         return data['numPages']
   
-def get_abstract(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+
+def get_abstract(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
 
     return (data['abstract']['value'], data['abstract']['format'])
 
-def get_title(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+
+def get_title(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
 
     return data['title']['value']
 
-def get_coauthors_jsonfile(json_file_):
-    with open(json_file_) as data_file:
-        data = json.load(data_file)
+
+def get_coauthors_jsonfile(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:
+            data = json.load(data_file)
 
     try:
         return data['authors']
@@ -87,6 +103,7 @@ def create_time_record(jname_, dict_):
         return [],[]
 
     return years_, counts_
+
 
 def get_top_N(dict_, N):
     total_count = {}
@@ -113,9 +130,11 @@ def get_top_N(dict_, N):
 
     return final_list
 
-def get_classification_jsonfile(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+
+def get_classification_jsonfile(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
 
     try:
         return data['classificationSchemes']
@@ -130,17 +149,19 @@ def get_disciplines(concepts_):
 
     return disciplines_
 
+
 def get_concepts(concepts_):
     conc_ = []
     for i in range( len(concepts_['physh']['concepts']) ):
         conc_.append( [concepts_['physh']['concepts'][i]['facet']['label'], concepts_['physh']['concepts'][i]['label']] )
 
-
     return conc_
 
-def get_all_affiliations(json_file_):
-    with open(json_file_) as data_file:    
-        data = json.load(data_file)
+
+def get_all_affiliations(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
 
     try:
         data_ = data['affiliations']
@@ -153,16 +174,17 @@ def get_all_affiliations(json_file_):
 
     return aff_
 
+
 def extract_country(affiliation):
      places = geograpy.get_place_context(text=affiliation)
      try:
-         country_ = places.country_mentions[0][0]
-         return country_
+         return places.country_mentions[0][0]
      except IndexError, e:
          return ""
 
-def get_all_countries(json_file_):
-    affiliations_ = get_all_affiliations(json_file_)
+
+def get_all_countries(json_file_,data=None):
+    affiliations_ = get_all_affiliations(json_file_,data)
 
     countries_list = []
     for aff_ in affiliations_:

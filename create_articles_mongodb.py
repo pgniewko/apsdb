@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os
+import json
 import numpy as np
 
 import pymongo
@@ -26,7 +27,7 @@ def browse_papers(path_, csv_file):
 
 #    client = MongoClient('localhost', 27017)
     client = MongoClient()
-    db = client['apsdb']                # Get a databes
+    db = client['apsdb']                # Get a databese
     aps = db['aps-articles-basic']      # Get a collection
 
     print("Removing all record ...")
@@ -39,16 +40,17 @@ def browse_papers(path_, csv_file):
         for name in files:
             if name.endswith(( ".json" )):
                 jfile = root + "/" + name
+                data = json.load( open(jfile) )
 
-                year,month,day = get_date_jsonfile(jfile)
-                journal = get_journal_short_json(jfile)
-                issue,volume = get_issue_volume(jfile)
-                doi = get_doi(jfile)
-                num_pages = get_number_of_pages(jfile)
-                coauthors = get_coauthors_jsonfile(jfile)
-                affiliations = get_all_affiliations(jfile)
-                countries = get_all_countries(jfile)
-                title = get_title(jfile)
+                year,month,day = get_date_jsonfile(jfile,data)
+                journal = get_journal_short_json(jfile,data)
+                issue,volume = get_issue_volume(jfile,data)
+                doi = get_doi(jfile,data)
+                num_pages = get_number_of_pages(jfile,data)
+                coauthors = get_coauthors_jsonfile(jfile,data)
+                affiliations = get_all_affiliations(jfile,data)
+                countries = get_all_countries(jfile,data)
+                title = get_title(jfile,data)
 
 
                 aps_paper = {'year':year, 'month':month, 'day':day}
@@ -60,6 +62,7 @@ def browse_papers(path_, csv_file):
                 aps_paper['num_affs'] = len(affiliations)
                 aps_paper['num_countries'] = len(countries)
                 aps_paper['title']  = title
+                aps_paper['title_length']  = len(title)
 
                 aps_paper['num_pages'] = num_pages
                 
@@ -80,6 +83,7 @@ def browse_papers(path_, csv_file):
 
     if len(tmp_list) > 0:
         aps.insert_many(tmp_list)
+        tmp_list = []
 
     return aps
                 

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os
+import json
 import numpy as np
 
 import matplotlib.pylab as plt
@@ -29,17 +30,17 @@ def browse_papers(path_, csv_file, fout):
         for name in files:
             if name.endswith(( ".json" )):
                 jfile = root + "/" + name
+                data = json.load( open(jfile) )
 
-                year,month,day = get_date_jsonfile(jfile)
-                journal = get_journal_short_json(jfile)
-                issue,volume = get_issue_volume(jfile)
-                doi = get_doi(jfile)
-                num_pages = get_number_of_pages(jfile)
-                coauthors = get_coauthors_jsonfile(jfile)
-                affiliations = get_all_affiliations(jfile)
-                countries = get_all_countries(jfile)
-                title = get_title(jfile)
-
+                year,month,day = get_date_jsonfile(jfile,data)
+                journal = get_journal_short_json(jfile,data)
+                issue,volume = get_issue_volume(jfile,data)
+                doi = get_doi(jfile,data)
+                num_pages = get_number_of_pages(jfile,data)
+                coauthors = get_coauthors_jsonfile(jfile,data)
+                affiliations = get_all_affiliations(jfile,data)
+                countries = get_all_countries(jfile,data)
+                title = get_title(jfile,data)
 
                 str_out = ""
                 str_out += str(year)    + " "
@@ -55,32 +56,16 @@ def browse_papers(path_, csv_file, fout):
                 str_out += str( len(title) ) + " "
                 str_out += str( num_pages ) + " "
 
-#                aps_paper = {'year':year, 'month':month, 'day':day}
-#                aps_paper['journal'] = journal
-#                aps_paper['issue'] = issue
-#                aps_paper['volume'] = volume
-#                aps_paper['doi'] = doi
-#                aps_paper['num_authors'] = len(coauthors)
-#                aps_paper['num_affs'] = len(affiliations)
-#                aps_paper['num_countries'] = len(countries)
-#                aps_paper['title']  = title
-#
-#                aps_paper['num_pages'] = num_pages
                 
                 if doi in dict_1.keys():
                     str_out += str( len( dict_1[doi] ) ) + " "
-#                    aps_paper['citations'] = len( dict_1[doi] )
                 else:
                     str_out += str( 0 ) + " "
-#                    aps_paper['citations'] = 0
                 
                 if doi in dict_2.keys():
                     str_out += str( len( dict_2[doi] ) ) + " "
-#                    aps_paper['num_references'] = len( dict_2[doi] )
                 else:
                     str_out += str( 0 ) + " "
-#                    aps_paper['num_references'] = 0
-           
 
 
                 fo.write(str_out + "\n")
@@ -91,7 +76,6 @@ def browse_papers(path_, csv_file, fout):
 if __name__ == "__main__":
     
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
-#    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRL/47/'
     citations_path = '../data/aps-dataset-citations-2016/aps-dataset-citations-2016.csv'
     ofile = "../db_text/papers_data.txt" 
 
