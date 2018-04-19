@@ -30,9 +30,13 @@ if __name__ == "__main__":
     pprint.pprint( aps_db.find_one(sort=[('citations', -1)]) )
 
     # FIND MOST CITING PAPER:
-    print("Paper citing most number of other APS papers")
-    pprint.pprint( aps_db.find_one(sort=[('num_references', -1)]) )
-   
+    print("###################################################")
+    print("Paper citing most number of other APS papers: TOP 3")
+    for pp in  aps_db.find().sort('num_references',pymongo.DESCENDING)[0:3] : 
+        pprint.pprint (pp )
+    print("###################################################")
+
+
     # PRINT ALL PAPERS WITH NUMER OF CITATION LARGER THAN 500:
 #    print("CITATION > 500")
 #    for entry in aps_db.find({'citations': {"$gt": 500}}).sort('year'):
