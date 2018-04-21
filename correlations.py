@@ -16,7 +16,7 @@ if __name__ == "__main__":
     
     database_path = '../db_text/papers_data.txt'
 
-    journals = ['PRA','PRB','PRC','PRD','PRE','PRL','RMP']
+    journals = ['PRA','PRB','PRC','PRD','PRE','PRL']
     #journals = ['PRA','PRAPPLIED']
 
     
@@ -26,7 +26,7 @@ if __name__ == "__main__":
     comment='#', header=None )
 
     cats = ['year','month','day','issue','volume','coauts','affs','countries','titlen','numpages','cits','refs']
-    j_colors = {'PRA':'blue','PRB':'green','PRC':'red','PRD':'orange','PRE':'black','PRL':'magenta','RMP':'red'}
+    j_colors = {'PRA':'blue','PRB':'green','PRC':'red','PRD':'orange','PRE':'black','PRL':'magenta','PRAPPLIED':'red'}
 
     fout = open('../results/correlations.dat','w')
     
@@ -44,19 +44,25 @@ if __name__ == "__main__":
 
                     r = 0.0
                     corrxy = 0.0
+                    DIVISOR = 0
                     for i in range(nsamples):
-                        sample_size = min(2500, len(new_data[el_i]))
-                        new_data_sample = new_data.sample( sample_size )
-                        data_i = pd.to_numeric( new_data_sample[el_i] )
-                        data_j = pd.to_numeric( new_data_sample[el_j] )
+                        try:
+                            sample_size = min(1000, len(new_data[el_i]))
+                            new_data_sample = new_data.sample( sample_size )
+                            data_i = pd.to_numeric( new_data_sample[el_i] )
+                            data_j = pd.to_numeric( new_data_sample[el_j] )
+                            DIVISOR += 1
+                        except ValueError:
+                            continue
+
                         ri,pi = pearsonr(data_i,data_j)
                         covxyi, corrxyi, varxi, varyi = distance_stats(data_i, data_j)
                    
                         r += ri
                         corrxy += corrxyi
 
-                    r /= nsamples
-                    corrxy /= nsamples
+                    r      /= DIVISOR
+                    corrxy /= DIVISOR
                     pearson_corr.append(r)
                     dist_corr.append(corrxy)
                     s = "%10s  %10s  %10s  % f  % f \n" % ( j_, el_i, el_j, r, corrxy)
