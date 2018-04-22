@@ -96,10 +96,13 @@ if __name__ == "__main__":
     print top_papers(full_data)
 
     create_cits_plots(data, "All APS papers")
-
+    
 
     fit = powerlaw.Fit(data, discrete=True)
     other_dists = ['exponential', 'truncated_power_law', 'lognormal', 'stretched_exponential']
     for dist_ in other_dists:
         R, p = fit.distribution_compare('power_law', dist_, normalized_ratio=True)
         print(dist_, R, p)
+    
+    print "Alpha: ",  fit.truncated_power_law.parameter1
+    print "Lambda: ", fit.truncated_power_law.parameter2
