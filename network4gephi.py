@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+import os
 from utils import parse_csv_file
 import networkx as nx
 
