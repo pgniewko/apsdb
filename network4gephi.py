@@ -1,7 +1,14 @@
 #! /usr/bin/env python
 
 import os
+import json
 from utils import parse_csv_file
+from utils import get_date_jsonfile
+from utils import get_journal_short_json
+from utils import get_issue_volume
+from utils import get_coauthors_jsonfile
+from utils import get_title
+from utils import get_doi
 import networkx as nx
 
 def browse_papers(path_, csv_file, xmin=60):
@@ -24,13 +31,13 @@ def browse_papers(path_, csv_file, xmin=60):
                 title = get_title(jfile,data)
                 doi_ = get_doi(jfile,data)
                 
-                if doi in dict_1.keys():
-                    cits_ = len( dict_1[doi] )
+                if doi_ in dict_1.keys():
+                    cits_ = len( dict_1[doi_] )
                 else:
                     cits_ = 0
                 
-                if doi in dict_2.keys():
-                    refs_ = len( dict_2[doi] )
+                if doi_ in dict_2.keys():
+                    refs_ = len( dict_2[doi_] )
                 else:
                     refs_ = 0
 
