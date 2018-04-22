@@ -42,7 +42,7 @@ def browse_papers(path_, csv_file, xmin=60):
                     refs_ = 0
 
                 if cits_ >= xmin:
-                    papers_list[doi_] = [ str(title),str(journal),str(year),str(volume),str(issue),str(cits_),str(refs_) ]
+                    papers_list[doi_] = [ title.encode('utf-8'),str(journal),str(year),str(volume),str(issue),str(cits_),str(refs_) ]
 
 
     print("Database processed ...")
