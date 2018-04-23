@@ -64,10 +64,13 @@ def build_graph(csv_file, xmin=60, papersdata=None):
             edges_dict[key] = key_idx
             
             if papersdata != None:
-                pl_ = papersdata[key]
-                G.add_node(key_idx, title=pl_[0],journal=pl_[1],year=pl_[2],\
-                volume=pl_[3],issue=pl_[4],no_cits=pl_[5],no_refs=pl_[6])
-            
+                try:
+                    pl_ = papersdata[key]
+                    G.add_node(key_idx, title=pl_[0],journal=pl_[1],year=pl_[2],\
+                    volume=pl_[3],issue=pl_[4],no_cits=pl_[5],no_refs=pl_[6])
+                except KeyError:
+                    G.add_node(key_idx)
+                    
             else:
                 G.add_node(key_idx)
 
