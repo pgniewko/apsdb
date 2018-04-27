@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import os
+import sys
 import json
 import numpy as np
 
@@ -89,7 +90,8 @@ def browse_papers(path_, csv_file):
                 
 
 if __name__ == "__main__":
-    
+    print ("Database is already built!")
+    sys.exit(1)    
     database_path = '../data/aps-dataset-metadata-abstracts-2016'
 #    database_path = '../data/aps-dataset-metadata-abstracts-2016/PRL/47/'
     citations_path = '../data/aps-dataset-citations-2016/aps-dataset-citations-2016.csv'
