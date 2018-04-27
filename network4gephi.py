@@ -76,8 +76,8 @@ def build_graph(csv_file, xmin=60, papersdata=None):
 
             key_idx += 1
 
-            if len( dict_1[key] ) != int(cits_):
-                print "ERROR:", key, len(dict_1[key]), int(cits_)
+#            if len( dict_1[key] ) != int(cits_):
+#                print "ERROR:", key, len(dict_1[key]), int(cits_)
 
     
 #    number_of_nodes = len( edges_dict.keys() )
