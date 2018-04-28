@@ -7,11 +7,6 @@ import matplotlib.pylab as plt
 from scipy.stats.stats import pearsonr
 from dcor import distance_stats
 
-def calc_correlations(filein,journal):
-    return 0
-
-
-
 if __name__ == "__main__":
     
     database_path = '../db_text/papers_data.txt'
