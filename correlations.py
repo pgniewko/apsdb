@@ -73,7 +73,7 @@ if __name__ == "__main__":
 
     plt.xlabel('Distance Correlation Coefficient',fontsize=15)
     plt.ylabel('Pearson Correlation Coefficient',fontsize=15)
-    plt.suptitle("Correlations between variables",fontsize=30)
+    plt.suptitle("Correlations between variables",fontsize=20)
     plt.legend(numpoints=1, loc=0, fontsize=15)
     fig.text(0.95, 0.05, '(c) 2018, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     plt.show()
