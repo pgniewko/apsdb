@@ -62,7 +62,7 @@ def create_cits_plots(data, title_=""):
 
 #### AX1
     ax1.set_xlabel("Number of citations", fontsize=20)
-    ax1.set_ylabel("PDF", fontsize=20)
+    ax1.set_ylabel("Probability density function", fontsize=20)
     ax1.plot(centers,pdf[1],'o')
     powerlaw.plot_pdf(data, ax=ax1, color='b',label='APS data')
     ax1.plot(x_, y_, 'r--', label=r'Power law fit: $x^{-%4.3f}$' % ( a ) )
