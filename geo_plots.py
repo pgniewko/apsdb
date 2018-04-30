@@ -41,6 +41,7 @@ if __name__ == "__main__":
     TOTAL_NUMBER = 0
     REGISTERED_NUMBER = 0
     df = pd.read_table(sys.argv[1], delim_whitespace=True, names=( 'doi', 'journal', 'year', 'country'), comment='#', header=None )
+    df = df[df['year']==2016]
     dat_ = df.groupby(['country']).size().sort_values(ascending=False)
 
     TOTAL_NUMBER = dat_.sum()
@@ -101,6 +102,8 @@ if __name__ == "__main__":
     world['papers_per_capita'] = 1000.0 * world.papers / world.pop_est
     world['papers_per_gdp'] = 1000.0 * world.papers / world.gdp_md_est
 
+    #print world.sort_values(by='papers_per_capita')
+
     d = {'name':t1, 'counts':t2, 'geometry':t3, 'continent':t4, 'pop_est': t5, 'gdp_md_est': t6}
     # My custom data frame
     df_mydata = gpd.GeoDataFrame(data=d)
@@ -113,7 +116,7 @@ if __name__ == "__main__":
     base = world.plot(ax=ax, column='papers_per_capita', cmap='rainbow', vmin=vmin, vmax=vmax)
 
 #    
-    plt.title('Number of APS papers per 1000 citizens', fontsize=20)
+    plt.title('Number of APS papers per 1000 citizens (in 2016)', fontsize=20)
     plt.xlabel('Latitude [$^\circ$]', fontsize=15)
     plt.ylabel('Longitude [$^\circ$]', fontsize=15)
 #
