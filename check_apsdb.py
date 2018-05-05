@@ -28,6 +28,8 @@ if __name__ == "__main__":
     # FIND MOST CITED ARTICLE:
     print("Paper most cited by other APS papers")
     pprint.pprint( aps_db.find_one(sort=[('citations', -1)]) )
+#    for pp in  aps_db.find().sort('citations',pymongo.DESCENDING)[0:5] : 
+#        pprint.pprint (pp )
 
     # FIND MOST CITING PAPER:
     print("###################################################")
