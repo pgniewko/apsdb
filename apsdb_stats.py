@@ -19,6 +19,7 @@ if __name__ == "__main__":
     # PRINT OUT THE FIRST PUBLISHED PAPER
     print ("First published paper:")
     pprint.pprint( aps_db.find_one(sort=[('year', 1)]) )
+    print("###########################################")
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7))
     
@@ -33,9 +34,10 @@ if __name__ == "__main__":
     for j_ in js_:
         paps_   = aps_db.find( {"journal":j_} )
         tot_num = paps_.count()
+        tot_frac= float(tot_num) / float(mongo_db_num)
         start_y = paps_.sort( 'year',1 )[0]['year']
         end_y   = paps_.sort( 'year',-1 )[0]['year']
-        print( j_ +" " + str(tot_num) + " " + str(start_y) + " "+ str(end_y) )
+        print( j_ +" " + str(tot_num) + " " + str(start_y) + " "+ str(end_y) + " " + str(tot_frac))
        
     for j_ in js_:
         paps_ = aps_db.find( {"journal":j_} )
@@ -51,9 +53,6 @@ if __name__ == "__main__":
             paps_2 = aps_db.find( {"journal":j_,'year':y_} )
             paps_zer = aps_db.find( {"journal":j_,'year':y_,'citations':0} )
             most_cited = start_y = paps_2.sort( 'citations',-1 )[0]['citations']
-            if most_cited > 4000:
-
-                pprint.pprint( paps_2.sort( 'citations',-1 )[0] )
             
             frac_ = float( paps_zer.count() ) / float( paps_2.count() )
             years_l.append(y_)
@@ -61,7 +60,7 @@ if __name__ == "__main__":
             zero_cit_f_l.append(frac_)
         
        
-        ax1.plot(years_l, most_cited_l, 'o', label=j_)
+        ax1.plot(years_l, most_cited_l, 'o-', label=j_)
         ax2.plot(years_l, zero_cit_f_l, 'o-', label=j_)
       
     
