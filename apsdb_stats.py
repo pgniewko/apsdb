@@ -22,7 +22,6 @@ if __name__ == "__main__":
     print("###########################################")
 
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7))
-    
     ax1.set_xlabel('Year',fontsize=20)
     ax1.set_ylabel('Max citations',fontsize=20)
     ax2.set_xlabel('Year',fontsize=20)
@@ -64,6 +63,7 @@ if __name__ == "__main__":
         ax2.plot(years_l, zero_cit_f_l, 'o-', label=j_)
       
     
+    f.text(0.60, 0.9, 'CITATION STATISTICS',fontsize=20, color='black', ha='right', va='bottom', alpha=0.5)
     f.text(0.95, 0.05, '(c) 2018, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
     ax2.legend(loc=0) 
     plt.show()
