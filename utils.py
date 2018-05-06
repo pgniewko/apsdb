@@ -4,6 +4,7 @@ import numpy as np
 import json
 import csv
 import geograpy
+from bs4 import BeautifulSoup
 
 failed_tries = 0
 
@@ -68,6 +69,16 @@ def get_abstract(json_file_,data=None):
 
     return (data['abstract']['value'], data['abstract']['format'])
 
+def get_clean_abstract(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
+
+    html = data['abstract']['value']
+    soup = BeautifulSoup(html)
+    clean_text = soup.get_text()
+    return clean_text
+
 
 def get_title(json_file_,data=None):
     if data == None:
@@ -76,6 +87,15 @@ def get_title(json_file_,data=None):
 
     return data['title']['value']
 
+def get_clean_title(json_file_,data=None):
+    if data == None:
+        with open(json_file_) as data_file:    
+            data = json.load(data_file)
+
+    html = data['title']['value'] 
+    soup = BeautifulSoup(html)
+    clean_text = soup.get_text()
+    return clean_text
 
 def get_coauthors_jsonfile(json_file_,data=None):
     if data == None:
