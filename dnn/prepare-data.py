@@ -17,13 +17,14 @@ from utils import get_clean_abstract
 from utils import get_doi
 
 def browse_papers(path_, csv_file, ofiles):
+    BUFF_SIZE=0
     of1,of2,of3,of4,of5 = ofiles
    
-    f1 = open(of1, 'w')
-    f2 = open(of2, 'w')
-    f3 = open(of3, 'w')
-    f4 = open(of4, 'w')
-    f5 = open(of5, 'w')
+    f1 = open(of1, 'w', BUFF_SIZE)
+    f2 = open(of2, 'w', BUFF_SIZE)
+    f3 = open(of3, 'w', BUFF_SIZE)
+    f4 = open(of4, 'w', BUFF_SIZE)
+    f5 = open(of5, 'w', BUFF_SIZE)
 
     print("Processing citations ...")
     dict_1, dict_2 = parse_csv_file(csv_file)
