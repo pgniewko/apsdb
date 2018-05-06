@@ -75,7 +75,7 @@ def browse_papers(path_, csv_file, fout):
 
 if __name__ == "__main__":
     
-    database_path = '../data/aps-dataset-metadata-abstracts-2016'
+    database_path  = '../data/aps-dataset-metadata-abstracts-2016'
     citations_path = '../data/aps-dataset-citations-2016/aps-dataset-citations-2016.csv'
     ofile = "../db_text/papers_data.txt" 
 
