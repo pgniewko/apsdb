@@ -50,6 +50,13 @@ def browse_papers(path_, csv_file, ofiles):
                         cits = 0
 
                     abstract = get_clean_abstract(jfile,data)
+                    abstract = abstract.replace('\n', ' ').replace('\r', '')
+
+                    _=str(journal)
+                    _=str(year)
+                    _=str(cits)
+                    _=abstract.encode('utf-8')
+                    _=title.encode('utf-8')
 
                     f1.write(str(journal) + "\n")
                     f2.write(str(year) + "\n")
