@@ -4,12 +4,12 @@ import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 
-CITATION_FILE="./data/citations_data_tmp.txt"
-YEAR_FILE="./data/year_data_tmp.txt"
-JOURNAL_FILE="./data/journals_data_tmp.txt"
+CITATION_FILE="./data/citations_data.txt"
+YEAR_FILE="./data/year_data.txt"
+JOURNAL_FILE="./data/journals_data.txt"
 
-TITLES_FILE="./data/title_data_tmp.txt"
-ABSTRACTS_FILE="./data/abstract_data_tmp.txt"
+TITLES_FILE="./data/title_data.txt"
+ABSTRACTS_FILE="./data/abstract_data.txt"
 
 
 def read_abstracts(fin):
