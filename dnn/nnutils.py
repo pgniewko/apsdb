@@ -132,10 +132,13 @@ def clean_text(text, stem=False):
     def remove_nonalphabetic_w_replace(text):
         text = text.replace('+', ' ').replace('.', ' ').replace(',', ' ').replace(':', ' ').replace('\'', '')
         text = text.replace('-', ' ')
-    # remove digits with regex
+        # remove digits with regex
         text = re.sub("(^|\W)\d+($|\W)", " ", text)
         return text
 
+    def remove_short_words(text):
+        tokens = [word for word in tokenize_text(text) if len(word) > 1]
+        return ' '.join(tokens)
 
     text = remove_nonalphabetic(text)
     text = text.strip(' ') #strip whitespaes
@@ -143,10 +146,11 @@ def clean_text(text, stem=False):
     if stem:
         text = stem_text(text) #stemming
     
-    text = remove_special_characters(text) #remove punctuation and symbols
-    text = remove_special_characters(text) #remove punctuation and symbols
-    text = remove_special_characters(text) #remove punctuation and symbols
+    #text = remove_special_characters(text) #remove punctuation and symbols
+    #text = remove_special_characters(text) #remove punctuation and symbols
+    #text = remove_special_characters(text) #remove punctuation and symbols
     text = remove_stopwords(text) #remove stopwords
+    text = remove_short_words(text)
     #text.strip(' ') # strip white spaces again?
 
     return text

@@ -1,6 +1,7 @@
 #! /usr/bin/env python
 
 import sys
+import pickle
 import numpy as np
 from nnutils import get_all_data
 from nnutils import get_sentences
@@ -12,9 +13,8 @@ if __name__ == "__main__":
     opath = './results/'
 
     fo_1 = open(opath+'titles.dat', 'w')
-    fo_2 = open(opath+'titles.dat', 'w')
+    fo_2 = open(opath+'abstracts.dat', 'w')
    
-
     data_titles    = get_all_data(feature_='title',    journals=['PRA','PRB','PRC','PRD','PRE'])
     data_abstracts = get_all_data(feature_='abstract', journals=['PRA','PRB','PRC','PRD','PRE'])
 
@@ -38,7 +38,7 @@ if __name__ == "__main__":
         for w_ in all_words:
             titles_words.append(w_) 
 
-    fo_1.close()
+#    fo_1.close()
     
 
     for index, row in data_abstracts.iterrows():
@@ -63,3 +63,13 @@ if __name__ == "__main__":
 
     num1, dict1 = number_of_unique_words(titles_words)
     num2, dict2 = number_of_unique_words(abstracts_words)
+    
+    print num1, num2
+    with open(opath+'titles.pickle', 'wb') as handle:
+        pickle.dump(dict1, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
+    with open(opath + 'abstracts.pickle', 'wb') as handle:
+        pickle.dump(dict2, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+
