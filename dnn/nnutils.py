@@ -8,6 +8,7 @@ from sklearn.model_selection import train_test_split
 from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer #, LancasterStemmer, RegexpStemmer, SnowballStemmer
+from keras.utils.np_utils import to_categorical
 
 default_stemmer = PorterStemmer()
 default_stopwords = stopwords.words('english') # or any other list of your chose
@@ -163,16 +164,89 @@ def get_words(sentence):
     return words
 
 
-def number_of_unique_words(sents):
-    my_dict = []
-    for sentence in sents:
-        for word in sentence:
-            if word in my_dict.keys():
-                my_dict[word] += 1
-            else:
-                my_dict[word]  = 0
+def number_of_unique_words(words):
+    my_dict = {}
+    for word in words:
+        if word in my_dict.keys():
+            my_dict[word] += 1
+        else:
+            my_dict[word]  = 1
 
     return len( my_dict.keys() ), my_dict
 
 
+def text2words(mytext):
+    all_words = []
+    
+    sents_ = get_sentences(mytext)
+    for sent_ in sents_:
+        sent_  = sent_.encode('utf-8')
+        words_ = get_words(sent_)
+        for w_ in words_:
+            all_words.append(w_)
+
+    return all_words
+
+
+def words2int(words, dict_):
+    decoded_words = []
+    for w_ in words:
+        if w_ in dict_.keys():
+            decoded_words.append( dict_[key] )
+
+    return np.array(decoded_words)
+
+
+def load_data(sample_size=100, top_words_=10000, feature_='abstract', yrange=[1990,2010], journals=['PRA','PRB']):
+    
+    TRAIN, TEST = get_data(SAMPLE_SIZE=sample_size, feature_=feature_, yrange=yrange, journals=journals)
+    X_train = []
+    y_train = []
+    X_test = []
+    y_test = []
+
+    opath = './results/' 
+    if feature_ == 'titles':
+        dict_stats = pickle.load( open( opath + 'titles.pickle' ) ) 
+    elif feature_ == 'abstracts':
+        dict_stats = pickle.load( open( opath + 'abstracts.pickle' ) )
+
+    journals_dict = {}
+    top_words_dict = {}
+    jc = 0
+    for j_ in journals:    
+        if j_ not in journals_dict.keys():
+            journals_dict[j_] = jc
+            jc += 1
+
+    wc = 1
+    for key, value in sorted(dict_stats.iteritems(), key=lambda (k,v): (v,k)):
+        if wc < top_words_:
+            top_words_dict[key] = wc
+            wc += 1
+    
+    for index, row in TRAIN.iterrows():
+        y_ = row['year']
+        j_ = row['journal']
+        feat_ = row[feature_]
+        feat_words = text2words(feat_)
+        w_ints = words2int(feat_words, top_words_dict)
+        X_train.append( w_ints )
+        y_train.append( journals_dict[j_] )
+
+    y_train = to_categorical(y_train, len(journals))
+      
+    for index, row in TEST.iterrows():
+        y_ = row['year']
+        j_ = row['journal']
+        feat_ = row[feature_]
+        feat_words = text2words(feat_)
+        w_ints = words2int(feat_words, top_words_dict)
+        X_test.append( w_ints )
+        y_test.append( journals_dict[j_] )
+    
+    y_test = to_categorical(y_test, len(journals))
+
+    
+    return (X_train, y_train) , (X_test, y_test)
 
