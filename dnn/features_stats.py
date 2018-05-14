@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 
 import sys
-import pickle
 import numpy as np
 from nnutils import get_all_data
 from nnutils import get_sentences
@@ -10,10 +9,16 @@ from nnutils import clean_text
 from nnutils import number_of_unique_words
 
 if __name__ == "__main__":
-    opath = './results/'
+    BUFF_SIZE=0 
 
-    fo_1 = open(opath+'titles.dat', 'w')
-    fo_2 = open(opath+'abstracts.dat', 'w')
+    opath1 = './results/'
+    opath2 = './data/'
+
+    fo_1 = open(opath1+'titles.dat', 'w', BUFF_SIZE)
+    fo_2 = open(opath1+'abstracts.dat', 'w', BUFF_SIZE)
+    
+    fo_3 = open(opath2+'tokenized_titles.dat', 'w', BUFF_SIZE)
+    fo_4 = open(opath2+'tokenized_abstracts.dat', 'w', BUFF_SIZE)
    
     data_titles    = get_all_data(feature_='title',    journals=['PRA','PRB','PRC','PRD','PRE'])
     data_abstracts = get_all_data(feature_='abstract', journals=['PRA','PRB','PRC','PRD','PRE'])
@@ -31,15 +36,17 @@ if __name__ == "__main__":
             words_ = get_words(sent_)
             for w_ in words_:
                 all_words.append(w_)
-
+                fo_3.write(w_ + " ")
+            fo_3.write('\n')
+      
         s = str(y_) + " " + str(j_) + " " + str( len(sents_) ) + " " + str( len(all_words) ) + "\n"
         fo_1.write(s)
 
         for w_ in all_words:
             titles_words.append(w_) 
 
-#    fo_1.close()
-    
+    fo_1.close()
+    fo_3.close()    
 
     for index, row in data_abstracts.iterrows():
         y_ = row['year']
@@ -52,7 +59,9 @@ if __name__ == "__main__":
             words_ = get_words(sent_)
             for w_ in words_:
                 all_words.append(w_)
-       
+                fo_4.write(w_ + " ")
+            fo_4.write('\n')
+          
         s = str(y_) + " " + str(j_) + " " + str( len(sents_) ) + " " + str( len(all_words) ) + "\n"
         fo_2.write(s)
         
@@ -60,16 +69,5 @@ if __name__ == "__main__":
             abstracts_words.append(w_) 
 
     fo_2.close()
-
-    num1, dict1 = number_of_unique_words(titles_words)
-    num2, dict2 = number_of_unique_words(abstracts_words)
-    
-    print num1, num2
-    with open(opath+'titles.pickle', 'wb') as handle:
-        pickle.dump(dict1, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-
-    with open(opath + 'abstracts.pickle', 'wb') as handle:
-        pickle.dump(dict2, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
+    fo_4.close()
 
