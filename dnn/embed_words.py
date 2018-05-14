@@ -22,9 +22,9 @@ if __name__ == "__main__":
     WINDOWS=[5,10,15]
     MIN_COUNTS=[2,5,10]
     
-    SIZES=[300]
-    WINDOWS=[10]
-    MIN_COUNTS=[5]
+#    SIZES=[300]
+#    WINDOWS=[10]
+#    MIN_COUNTS=[5]
    
     print("READING SENTENCES ...")
     sentences = read_sentences( SENTENCES_FILE )
