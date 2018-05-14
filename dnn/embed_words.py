@@ -8,19 +8,13 @@ from sklearn.manifold import TSNE
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
-def read_sentences(fname):
-    fin = open(fname, 'rU')
-    sentences = []
-    for line in fin:
-        pairs = line.rstrip('\n').split()
-        sentences.append( pairs )
+from nnutils import read_sentences
 
-    return sentences
 
 if __name__ == "__main__":
 
     SENTENCES_FILE='./data/tokenized_abstracts.dat'
-    #SENTENCES_FILE='./data/tokenized_titles.dat'
+#    SENTENCES_FILE='./data/tokenized_titles.dat'
     opath = './model/word2vec/'
   
 
@@ -50,23 +44,26 @@ if __name__ == "__main__":
   
     print("ALL EMBEDDINGS ARE CREATED")
 
+    f, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7))
     model = Word2Vec.load(opath+'Abstracts_Word2Vec_SIZE_300_WINDOW_10_MIN_COUNT_5.bin')
     X = model[model.wv.vocab]
+    
+
     tsne = TSNE(n_components=2)
     X_tsne = tsne.fit_transform(X)
-    plt.rcParams['figure.figsize'] = [7, 7]
-    plt.scatter(X_tsne[:, 0], X_tsne[:, 1])
-    plt.title('Word2Vec embedding (size=%d;window=%d,min_count=%d). t-SNE' %(300,10,5) )
-    plt.xlabel(r'$\rm X_1$', fontsize=30)
-    plt.ylabel(r'$\rm X_2$', fontsize=30)
-    plt.show()
+    ax1.scatter(X_tsne[:, 0], X_tsne[:, 1])
+    ax1.set_title('t-SNE (size=%d;window=%d,min_count=%d' %(300,10,5) )
+    ax1.set_xlabel(r'$\rm X_1$', fontsize=30)
+    ax1.set_ylabel(r'$\rm X_2$', fontsize=30)
 
 
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X)
-    # create a scatter plot of the projection
-    plt.scatter(X_pca[:, 0], X_pca[:, 1])
-    plt.title('Word2Vec embedding (size=%d;window=%d,min_count=%d). PCA' %(300,10,5) )
-    plt.xlabel(r'$\rm X_1$', fontsize=30)
-    plt.ylabel(r'$\rm X_2$', fontsize=30)
+    ax2.scatter(X_pca[:, 0], X_pca[:, 1])
+    ax2.set_title('PCA (size=%d;window=%d,min_count=%d)' %(300,10,5) )
+    ax2.set_xlabel(r'$\rm X_1$', fontsize=30)
+    ax2.set_ylabel(r'$\rm X_2$', fontsize=30)
+
+    f.text(0.95, 0.05, '(c) 2018, P.G.',fontsize=10, color='gray', ha='right', va='bottom', alpha=0.5)
+
     plt.show()
