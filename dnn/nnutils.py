@@ -179,6 +179,16 @@ def number_of_unique_words(words):
     return len( my_dict.keys() ), my_dict
 
 
+def read_sentences(fname):
+     fin = open(fname, 'rU')
+     sentences = []
+     for line in fin:
+         pairs = line.rstrip('\n').split()
+         sentences.append( pairs )
+
+     return sentences
+
+
 #def text2words(mytext):
 #    all_words = []
 #    
