@@ -95,6 +95,6 @@ if __name__ == "__main__":
         all_words += sentence
     counts = Counter(all_words)
     x = counts.values()
-    
+
     create_cits_plots(x, "All abstracts")
 

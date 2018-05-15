@@ -9,6 +9,12 @@ from nltk.tokenize import word_tokenize, sent_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import PorterStemmer #, LancasterStemmer, RegexpStemmer, SnowballStemmer
 from keras.utils.np_utils import to_categorical
+from gensim.models import KeyedVectors
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from sklearn.preprocessing import LabelEncoder
+from keras.utils import np_utils
+
 
 default_stemmer = PorterStemmer()
 default_stopwords = stopwords.words('english') # or any other list of your chose
@@ -167,7 +173,6 @@ def get_words(sentence):
     words = word_tokenize(sentence) 
     return words
 
-
 def number_of_unique_words(words):
     my_dict = {}
     for word in words:
@@ -189,78 +194,86 @@ def read_sentences(fname):
      return sentences
 
 
-#def text2words(mytext):
-#    all_words = []
-#    
-#    sents_ = get_sentences(mytext)
-#    for sent_ in sents_:
-#        sent_  = sent_.encode('utf-8')
-#        words_ = get_words(sent_)
-#        for w_ in words_:
-#            all_words.append(w_)
-#
-#    return all_words
-#
-#
-#def words2int(words, dict_):
-#    decoded_words = []
-#    for w_ in words:
-#        if w_ in dict_.keys():
-#            decoded_words.append( dict_[key] )
-#
-#    return np.array(decoded_words)
-#
-#
-#def load_data(sample_size=100, top_words_=10000, feature_='abstract', yrange=[1990,2010], journals=['PRA','PRB']):
-#    
-#    TRAIN, TEST = get_data(SAMPLE_SIZE=sample_size, feature_=feature_, yrange=yrange, journals=journals)
-#    X_train = []
-#    y_train = []
-#    X_test = []
-#    y_test = []
-#
-#    opath = './results/' 
-#    if feature_ == 'titles':
-#        dict_stats = pickle.load( open( opath + 'titles.pickle' ) ) 
-#    elif feature_ == 'abstracts':
-#        dict_stats = pickle.load( open( opath + 'abstracts.pickle' ) )
-#
-#    journals_dict = {}
-#    top_words_dict = {}
-#    jc = 0
-#    for j_ in journals:    
-#        if j_ not in journals_dict.keys():
-#            journals_dict[j_] = jc
-#            jc += 1
-#
-#    wc = 1
-#    for key, value in sorted(dict_stats.iteritems(), key=lambda (k,v): (v,k)):
-#        if wc < top_words_:
-#            top_words_dict[key] = wc
-#            wc += 1
-#    
-#    for index, row in TRAIN.iterrows():
-#        y_ = row['year']
-#        j_ = row['journal']
-#        feat_ = row[feature_]
-#        feat_words = text2words(feat_)
-#        w_ints = words2int(feat_words, top_words_dict)
-#        X_train.append( w_ints )
-#        y_train.append( journals_dict[j_] )
-#
-#    y_train = to_categorical(y_train, len(journals))
-#      
-#    for index, row in TEST.iterrows():
-#        y_ = row['year']
-#        j_ = row['journal']
-#        feat_ = row[feature_]
-#        feat_words = text2words(feat_)
-#        w_ints = words2int(feat_words, top_words_dict)
-#        X_test.append( w_ints )
-#        y_test.append( journals_dict[j_] )
-#    
-#    y_test = to_categorical(y_test, len(journals))
-#
-#    
-#    return (X_train, y_train) , (X_test, y_test)
-#
+def text2words(mytext):
+    all_words = []
+    
+    sentences = get_sentences(mytext)
+    for sentence in sentences:
+        sentence  = sentence.encode('utf-8')
+        words = get_words(sentence)
+        all_words += words
+
+    return all_words
+
+
+def load_data(sample_size=1000, feature_='abstract', yrange=[1990,2010], journals=['PRA','PRB']):
+    
+    TRAIN, TEST = get_data(SAMPLE_SIZE=sample_size, feature_=feature_, yrange=yrange, journals=journals)
+    X_train = []
+    y_train = []
+    X_test = []
+    y_test = []
+
+    journals_dict = {}
+    jcounter = 0
+    for key in journals:
+        if key not in journals_dict:
+            journals_dict[key] = jcounter
+            jcounter += 1
+
+    for index, row in TRAIN.iterrows():
+        y_ = row['year']
+        j_ = row['journal']
+        text = row[feature_]
+        X_train.append( ' '.join( text2words(text)) )
+        y_train.append( journals_dict[j_] )
+
+    for index, row in TEST.iterrows():
+        y_ = row['year']
+        j_ = row['journal']
+        text = row[feature_]
+        X_test.append( ' '.join(text2words(text)) )
+        y_test.append( journals_dict[j_] )
+    
+    return (X_train, y_train) , (X_test, y_test)
+
+
+def tokenize_text(train_l, test_l, word2vec, MAX_NB_WORDS=10000,MAX_SEQUENCE_LENGTH=200, EMBEDDING_DIM=300):
+    tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
+    tokenizer.fit_on_texts(train_l + test_l)
+    
+    sequences_train = tokenizer.texts_to_sequences(train_l)
+    sequences_test  = tokenizer.texts_to_sequences(test_l)
+   
+    word_index = tokenizer.word_index
+    print('Found %s unique tokens' % len(word_index))
+
+    data_train = pad_sequences(sequences_train, maxlen=MAX_SEQUENCE_LENGTH)
+    data_test  = pad_sequences(sequences_test, maxlen=MAX_SEQUENCE_LENGTH)
+
+    print('Preparing embedding matrix')
+    
+
+    nb_words = min(MAX_NB_WORDS, len(word_index))+1
+    nb_words = max(MAX_NB_WORDS, len(word_index))+1
+    embedding_matrix = np.zeros((nb_words, EMBEDDING_DIM))
+    for word, i in word_index.items():
+        if word in word2vec.wv.vocab:
+            embedding_matrix[i] = word2vec.wv.word_vec(word)
+
+    print('Null word embeddings: %d' % np.sum(np.sum(embedding_matrix, axis=1) == 0))
+
+    return embedding_matrix, data_train, data_test, nb_words
+
+
+def transform_Y(Y):
+    encoder = LabelEncoder()
+    encoder.fit(Y)
+    encoded_Y = encoder.transform(Y)
+    # convert integers to dummy variables (i.e. one hot encoded)
+    dummy_y = np_utils.to_categorical(encoded_Y)
+    return dummy_y   
+
+
+
+
