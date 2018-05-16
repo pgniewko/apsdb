@@ -98,7 +98,7 @@ def get_data(SAMPLE_SIZE=100,feature_='abstract',yrange=[1990,2010],journals=['P
 
 
     df_combined = pd.concat([df_j, df_y, df_f], axis=1)
-   
+
     TRAIN_LIST = []
     TEST_LIST  = []
     for journal_x in journals:
@@ -107,8 +107,11 @@ def get_data(SAMPLE_SIZE=100,feature_='abstract',yrange=[1990,2010],journals=['P
         TRAIN_LIST.append( train_x)
         TEST_LIST.append( test_x)
 
+    # SHUFFLE DATA
     train_data = pd.concat(TRAIN_LIST, axis=0)
     test_data  = pd.concat(TEST_LIST, axis=0)
+    train_data = train_data.sample(frac=1)
+    test_data  = test_data.sample(frac=1)
 
     return ( train_data, test_data )
 
@@ -276,7 +279,5 @@ def transform_Y(Y):
     # convert integers to dummy variables (i.e. one hot encoded)
     dummy_y = np_utils.to_categorical(encoded_Y)
     return dummy_y   
-
-
 
 
