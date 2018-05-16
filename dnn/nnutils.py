@@ -239,6 +239,7 @@ def load_data(sample_size=1000, feature_='abstract', yrange=[1990,2010], journal
 
 
 def tokenize_text(train_l, test_l, word2vec, MAX_NB_WORDS=10000,MAX_SEQUENCE_LENGTH=200, EMBEDDING_DIM=300):
+    
     tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
     tokenizer.fit_on_texts(train_l + test_l)
     
@@ -252,12 +253,14 @@ def tokenize_text(train_l, test_l, word2vec, MAX_NB_WORDS=10000,MAX_SEQUENCE_LEN
     data_test  = pad_sequences(sequences_test, maxlen=MAX_SEQUENCE_LENGTH)
 
     print('Preparing embedding matrix')
-    
 
     nb_words = min(MAX_NB_WORDS, len(word_index))+1
-    nb_words = max(MAX_NB_WORDS, len(word_index))+1
     embedding_matrix = np.zeros((nb_words, EMBEDDING_DIM))
+
     for word, i in word_index.items():
+        if i >= MAX_NB_WORDS:
+            continue 
+
         if word in word2vec.wv.vocab:
             embedding_matrix[i] = word2vec.wv.word_vec(word)
 
