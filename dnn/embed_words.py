@@ -42,7 +42,8 @@ if __name__ == "__main__":
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(14,7))
     model = Word2Vec.load(opath+'Abstracts_Word2Vec_SIZE_200_WINDOW_3_MIN_COUNT_10_ITER_1.bin')
     X = model[model.wv.vocab]
-    
+    idcs = range(0, len(X), 10)
+    X = X[idcs, :]
 
     tsne = TSNE(n_components=2)
     X_tsne = tsne.fit_transform(X)
