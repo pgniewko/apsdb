@@ -108,8 +108,6 @@ def plot_confusion_matrix(cm, classes,
     Normalization can be applied by setting `normalize=True`.
     """
     
-    f, ax1 = plt.subplots(1, figsize=(8,8))
-    
     if normalize:
         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
         print("Normalized confusion matrix")
@@ -214,7 +212,7 @@ if __name__ == "__main__":
 
 
     # Using keras to load the dataset with the top_words
-    sample_size = 100
+    sample_size = 5000
     journals_ = ['PRA','PRB','PRC','PRD','PRE']
 
     print("LOAD DATA")
@@ -223,7 +221,7 @@ if __name__ == "__main__":
                                               journals=journals_)
 
 
-    MAX_NB_WORDS=1000
+    MAX_NB_WORDS=10000
     MAX_SEQUENCE_LENGTH=200
 
     print("TOKENIZE DATA")
@@ -259,7 +257,7 @@ if __name__ == "__main__":
         print(model.summary())
         # Log to tensorboard
         print("TRAINING MODEL: " + labels[model_idx])
-        model = train_model(model, X_train, y_train, epochs_=10, callbacks_=[tensorBoardCallback])
+        model = train_model(model, X_train, y_train, epochs_=25, callbacks_=[tensorBoardCallback])
         print("SAVING MODEL: "+ labels[model_idx])
         save_model(model, fn=labels[model_idx]+'.h5')
         print("EVALUATE MODEL: " + labels[model_idx])
