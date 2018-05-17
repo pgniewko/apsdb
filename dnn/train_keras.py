@@ -257,7 +257,7 @@ if __name__ == "__main__":
         print(model.summary())
         # Log to tensorboard
         print("TRAINING MODEL: " + labels[model_idx])
-        model = train_model(model, X_train, y_train, epochs_=25, callbacks_=[tensorBoardCallback])
+        model = train_model(model, X_train, y_train, epochs_=10, callbacks_=[tensorBoardCallback])
         print("SAVING MODEL: "+ labels[model_idx])
         save_model(model, fn=labels[model_idx]+'.h5')
         print("EVALUATE MODEL: " + labels[model_idx])
