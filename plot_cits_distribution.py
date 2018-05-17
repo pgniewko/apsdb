@@ -87,7 +87,7 @@ if __name__ == "__main__":
 
     data = []
     full_data = []
-    fin = open(sys.argv[1],'rU')
+    fin = open('../db_text/cits.txt','rU')
     for line in fin:
         pairs = line.split()
         data.append( int(pairs[1]) )
