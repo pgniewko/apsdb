@@ -212,7 +212,7 @@ if __name__ == "__main__":
 
 
     # Using keras to load the dataset with the top_words
-    sample_size = 5000
+    sample_size = 7500
     journals_ = ['PRA','PRB','PRC','PRD','PRE']
 
     print("LOAD DATA")
@@ -248,6 +248,7 @@ if __name__ == "__main__":
     model_lstm     = create_model_lstm( top_words, embedding_vecor_length, max_length, number_of_classes, emb)
     model_lstm_cnn = create_model_lstm_cnn( top_words, embedding_vecor_length, max_length, number_of_classes, emb)
     models = [model_fnn, model_cnn, model_lstm, model_lstm_cnn]
+    models = [model_fnn, model_cnn, model_lstm]
     f, ax1 = plt.subplots(1, figsize=(7,7))
 
     labels = ['FF','CNN-1D', 'LSTM','CNN-1D-LSTM']
@@ -279,10 +280,10 @@ if __name__ == "__main__":
     plt.legend(loc="lower right")
     plt.show()
 
+    print("ROC for LSTM")
+    plot_rocs(model_lstm, X_test, y_test, number_of_classes)
 
-    plot_rocs(model_lstm_cnn, X_test, y_test, number_of_classes)
-
-    y_score = model.predict(X_test)
+    y_score = model_lstm.predict(X_test)
     y_pred_classes = y_score.argmax(axis=-1)  #probas_to_classes(y_score)
 
     cnf_matrix = confusion_matrix(y_test_classes, y_pred_classes)
